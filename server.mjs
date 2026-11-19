@@ -188,6 +188,10 @@ async function sendBookingNotificationEmail(booking) {
               <td class="val"><a href="tel:${booking.mobileNumber}" style="color: #0284c7; text-decoration: none;">${booking.mobileNumber}</a></td>
             </tr>
             <tr>
+              <td class="lbl">Occupation / Profession</td>
+              <td class="val">${booking.occupation || 'Not specified'}</td>
+            </tr>
+            <tr>
               <td class="lbl">Department / Faculty</td>
               <td class="val">${booking.department || 'Not specified'}</td>
             </tr>
@@ -235,7 +239,7 @@ async function sendBookingNotificationEmail(booking) {
       to: 'it1@marinersgroup.com.bd',
       replyTo: 'it1@marinersgroup.com.bd',
       subject,
-      text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
+      text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nOccupation: ${booking.occupation || 'N/A'}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
       html
     });
     console.log(`[Email] Notification delivered to it1@marinersgroup.com.bd (Message ID: ${info.messageId})`);
@@ -274,6 +278,7 @@ async function processUnsentSupabaseEmails() {
         referenceNo: r.reference_no,
         fullName: r.full_name,
         mobileNumber: r.mobile_number,
+        occupation: parsedNotes.occupation || '',
         department: parsedNotes.department || '',
         batch: parsedNotes.batch || '',
         shortAddress: r.organization || '',
@@ -346,7 +351,7 @@ const server = http.createServer((req, res) => {
       req.on('end', async () => {
         try {
           const data = JSON.parse(body || '{}');
-          const { fullName, mobileNumber, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
+          const { fullName, mobileNumber, occupation, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
 
           if (!fullName || fullName.trim().length < 2) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -412,6 +417,7 @@ const server = http.createServer((req, res) => {
             referenceNo: refNo,
             fullName: fullName.trim(),
             mobileNumber: cleanMobile,
+            occupation: occupation ? occupation.trim() : undefined,
             department: department ? department.trim() : undefined,
             batch: batch ? batch.trim() : undefined,
             shortAddress: shortAddress ? shortAddress.trim() : undefined,

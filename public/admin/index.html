@@ -281,6 +281,7 @@
                 <th class="py-3 px-4">Ref ID</th>
                 <th class="py-3 px-4">Alumnus Name</th>
                 <th class="py-3 px-4">Mobile Number</th>
+                <th class="py-3 px-4">Occupation</th>
                 <th class="py-3 px-4">Dept &amp; Batch</th>
                 <th class="py-3 px-4">Address / Org</th>
                 <th class="py-3 px-4">Visit Date</th>
@@ -292,7 +293,7 @@
             </thead>
             <tbody id="bookingsTableBody" class="divide-y divide-slate-100 text-slate-700 font-medium">
               <tr>
-                <td colspan="11" class="py-12 text-center text-slate-400">
+                <td colspan="12" class="py-12 text-center text-slate-400">
                   <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-400 mb-2">
                     <i data-lucide="inbox" class="w-5 h-5"></i>
                   </div>
@@ -348,6 +349,10 @@
           <div class="flex justify-between">
             <span class="text-slate-500">Contact Number:</span>
             <strong id="modalPhone" class="text-slate-900 font-mono">017XXXXXXXX</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Occupation:</span>
+            <strong id="modalOccupation" class="text-slate-900">—</strong>
           </div>
           <div class="flex justify-between">
             <span class="text-slate-500">Address / Org:</span>
@@ -487,7 +492,7 @@
       const tableBody = document.getElementById("bookingsTableBody");
       tableBody.innerHTML = `
         <tr>
-          <td colspan="11" class="py-12 text-center text-slate-400">
+          <td colspan="12" class="py-12 text-center text-slate-400">
             <div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-500 animate-spin mb-2">
               <i data-lucide="loader-2" class="w-4 h-4"></i>
             </div>
@@ -532,6 +537,7 @@
               referenceNo: r.reference_no,
               fullName: r.full_name,
               mobileNumber: r.mobile_number,
+              occupation: notes.occupation || '',
               department: notes.department || '',
               batch: notes.batch || '',
               shortAddress: notes.shortAddress || r.organization || '',
@@ -612,7 +618,7 @@
       return allBookings.filter(b => {
         // Query match
         if (q) {
-          const hay = `${b.fullName || ''} ${b.mobileNumber || ''} ${b.referenceNo || ''} ${b.department || ''} ${b.batch || ''} ${b.shortAddress || ''}`.toLowerCase();
+          const hay = `${b.fullName || ''} ${b.mobileNumber || ''} ${b.referenceNo || ''} ${b.occupation || ''} ${b.department || ''} ${b.batch || ''} ${b.shortAddress || ''}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
 
@@ -640,7 +646,7 @@
       if (bookings.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="11" class="py-12 text-center text-slate-400">
+            <td colspan="12" class="py-12 text-center text-slate-400">
               <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-400 mb-2">
                 <i data-lucide="search-x" class="w-5 h-5"></i>
               </div>
@@ -669,6 +675,9 @@
               <a href="${waLink}" target="_blank" title="WhatsApp Chat" class="ml-1 text-emerald-600 hover:text-emerald-700 inline-block align-middle">
                 💬
               </a>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap text-slate-800 font-medium">
+              ${b.occupation || '—'}
             </td>
             <td class="py-3 px-4 whitespace-nowrap">
               <span class="block text-slate-900 font-semibold">${b.department || '—'}</span>
@@ -727,6 +736,7 @@
         "Pass Reference ID",
         "Full Name",
         "Mobile Number",
+        "Occupation / Profession",
         "Department / Faculty",
         "Batch",
         "Short Address / Organization",
@@ -748,6 +758,7 @@
         escapeCsv(b.referenceNo),
         escapeCsv(b.fullName),
         escapeCsv(b.mobileNumber),
+        escapeCsv(b.occupation || ""),
         escapeCsv(b.department || ""),
         escapeCsv(b.batch ? `Batch ${b.batch}` : ""),
         escapeCsv(b.shortAddress || ""),
@@ -780,10 +791,11 @@
       activeBooking = b;
       document.getElementById("modalName").textContent = b.fullName || "N/A";
       document.getElementById("modalRef").textContent = b.referenceNo;
-      document.getElementById("modalSub").textContent = [b.department, b.batch ? `Batch ${b.batch}` : "", b.shortAddress].filter(Boolean).join(" • ") || "CU Alumni Society Member";
+      document.getElementById("modalSub").textContent = [b.occupation, b.department, b.batch ? `Batch ${b.batch}` : "", b.shortAddress].filter(Boolean).join(" • ") || "CU Alumni Society Member";
       document.getElementById("modalDate").textContent = formatDMY(b.visitDate);
       document.getElementById("modalTime").textContent = b.visitTimeSlot;
       document.getElementById("modalPhone").textContent = b.mobileNumber;
+      document.getElementById("modalOccupation").textContent = b.occupation || "Not specified";
       document.getElementById("modalAddress").textContent = b.shortAddress || "Uttara, Dhaka";
       document.getElementById("modalCreated").textContent = b.createdAt ? new Date(b.createdAt).toLocaleString("en-GB") : "N/A";
 

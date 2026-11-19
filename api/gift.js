@@ -92,6 +92,10 @@ async function sendNotificationEmail(booking) {
               <td class="val"><a href="tel:${booking.mobileNumber}" style="color: #0284c7; text-decoration: none;">${booking.mobileNumber}</a></td>
             </tr>
             <tr>
+              <td class="lbl">Occupation / Profession</td>
+              <td class="val">${booking.occupation || 'Not specified'}</td>
+            </tr>
+            <tr>
               <td class="lbl">Department / Faculty</td>
               <td class="val">${booking.department || 'Not specified'}</td>
             </tr>
@@ -142,7 +146,7 @@ async function sendNotificationEmail(booking) {
       to: 'it1@marinersgroup.com.bd',
       replyTo: 'it1@marinersgroup.com.bd',
       subject,
-      text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
+      text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nOccupation: ${booking.occupation || 'N/A'}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
       html
     });
     console.log(`[Email] Notification delivered via port 465 (ID: ${info.messageId})`);
@@ -162,7 +166,7 @@ async function sendNotificationEmail(booking) {
         to: 'it1@marinersgroup.com.bd',
         replyTo: 'it1@marinersgroup.com.bd',
         subject,
-        text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
+        text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nOccupation: ${booking.occupation || 'N/A'}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
         html
       });
       console.log(`[Email] Notification delivered via port 587 (ID: ${info2.messageId})`);
@@ -200,7 +204,9 @@ async function saveToSupabase(booking) {
       mobile_number: booking.mobileNumber,
       guest_category: 'CU Alumni Day 2026',
       organization: booking.shortAddress || 'Uttara, Dhaka',
-      designation: `CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`,
+      designation: booking.occupation
+        ? `${booking.occupation} • CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`
+        : `CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`,
       additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
       status: 'approved',
       email_sent: false,
@@ -208,6 +214,7 @@ async function saveToSupabase(booking) {
         event: 'cu_alumni_gift_2026',
         visitDate: booking.visitDate,
         visitTimeSlot: booking.visitTimeSlot,
+        occupation: booking.occupation,
         department: booking.department,
         batch: booking.batch,
         shortAddress: booking.shortAddress,
@@ -256,6 +263,7 @@ async function fetchFromSupabase() {
         referenceNo: r.reference_no,
         fullName: r.full_name,
         mobileNumber: r.mobile_number,
+        occupation: notes.occupation || '',
         department: notes.department || '',
         batch: notes.batch || '',
         shortAddress: notes.shortAddress || r.organization || '',
@@ -284,7 +292,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const data = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-      const { fullName, mobileNumber, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
+      const { fullName, mobileNumber, occupation, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
 
       if (!fullName || fullName.trim().length < 2) {
         return res.status(400).json({ success: false, error: 'Please enter your full legal name.' });
@@ -338,6 +346,7 @@ export default async function handler(req, res) {
         referenceNo: refNo,
         fullName: fullName.trim(),
         mobileNumber: cleanMobile,
+        occupation: occupation ? occupation.trim() : undefined,
         department: department ? department.trim() : undefined,
         batch: batch ? batch.trim() : undefined,
         shortAddress: shortAddress ? shortAddress.trim() : undefined,

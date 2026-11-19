@@ -362,17 +362,37 @@
             </div>
           </div>
 
-          <!-- 4. Short Address -->
-          <div>
-            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
-              Short Address / Area <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
-            </label>
-            <input
-              type="text"
-              id="addressInput"
-              placeholder="e.g. Sector 3, Uttara, Dhaka"
-              class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
-            />
+          <!-- 4. Occupation & Short Address / Area (Both Optional) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                Occupation / Profession <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
+              </label>
+              <div class="relative">
+                <i data-lucide="briefcase" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input
+                  type="text"
+                  id="occupationInput"
+                  placeholder="e.g. Banker / Business / Service"
+                  class="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                Short Address / Area <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
+              </label>
+              <div class="relative">
+                <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input
+                  type="text"
+                  id="addressInput"
+                  placeholder="e.g. Sector 3, Uttara, Dhaka"
+                  class="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+                />
+              </div>
+            </div>
           </div>
 
           <!-- 5. Head Office Visit Date (Strict 15-Day Lock, Guaranteed DD/MM/YYYY Format) -->
@@ -798,6 +818,7 @@
 
       const fullName = document.getElementById("fullNameInput").value.trim();
       const mobileNumber = document.getElementById("mobileInput").value.trim().replace(/[\s-]/g, "");
+      const occupation = document.getElementById("occupationInput").value.trim();
       const department = document.getElementById("deptInput").value.trim();
       const batch = document.getElementById("batchInput").value.trim();
       const shortAddress = document.getElementById("addressInput").value.trim();
@@ -832,6 +853,7 @@
           body: JSON.stringify({
             fullName,
             mobileNumber,
+            occupation: occupation || undefined,
             department: department || undefined,
             batch: batch || undefined,
             shortAddress: shortAddress || undefined,
@@ -854,6 +876,7 @@
           referenceNo: `GIFT-${Math.floor(1000 + Math.random() * 9000)}`,
           fullName,
           mobileNumber,
+          occupation,
           department,
           batch,
           shortAddress,
@@ -893,7 +916,9 @@
             mobile_number: booking.mobileNumber,
             guest_category: "CU Alumni Day 2026",
             organization: booking.shortAddress || "Uttara, Dhaka",
-            designation: `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`,
+            designation: booking.occupation
+              ? `${booking.occupation} • CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`
+              : `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`,
             additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
             status: "approved",
             email_sent: false,
@@ -922,7 +947,7 @@
       document.getElementById("vDate").textContent = `${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})`;
       document.getElementById("vTime").textContent = booking.visitTimeSlot;
 
-      const subParts = [booking.department, booking.batch ? `Batch ${booking.batch}` : "", booking.shortAddress].filter(Boolean);
+      const subParts = [booking.occupation, booking.department, booking.batch ? `Batch ${booking.batch}` : "", booking.shortAddress].filter(Boolean);
       document.getElementById("vSubInfo").textContent = subParts.join(" • ") || "Chittagong University Alumni Member";
 
       // Render QR Code
@@ -975,7 +1000,9 @@ I have registered for the CU Alumni Day 2026 Executive Gift Pass!
 📋 Pass Reference: ${booking.referenceNo}
 👤 Name: ${booking.fullName}
 📞 Mobile: ${booking.mobileNumber}
+💼 Occupation: ${booking.occupation || 'Not specified'}
 🏛️ Dept/Batch: ${booking.department || 'N/A'}${booking.batch ? ' (Batch ' + booking.batch + ')' : ''}
+📍 Address: ${booking.shortAddress || 'N/A'}
 📅 Confirmed Visit Date: ${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})
 ⏰ Preferred Time Slot: ${booking.visitTimeSlot}
 🎁 Gift Collection Point: Friends Club Field, Sector 3, Uttara, Dhaka
@@ -1008,6 +1035,10 @@ Please confirm my pass reservation. Thank you!`;
       document.getElementById("bookingFormSection").classList.remove("hidden");
       document.getElementById("fullNameInput").value = "";
       document.getElementById("mobileInput").value = "";
+      document.getElementById("occupationInput").value = "";
+      document.getElementById("deptInput").value = "";
+      document.getElementById("batchInput").value = "";
+      document.getElementById("addressInput").value = "";
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
@@ -1080,7 +1111,7 @@ Please confirm my pass reservation. Thank you!`;
 
         ctx.fillStyle = "#334155";
         ctx.font = "16px sans-serif";
-        const subInfo = [currentBooking.department, currentBooking.batch ? `Batch ${currentBooking.batch}` : "", currentBooking.shortAddress].filter(Boolean).join("  •  ");
+        const subInfo = [currentBooking.occupation, currentBooking.department, currentBooking.batch ? `Batch ${currentBooking.batch}` : "", currentBooking.shortAddress].filter(Boolean).join("  •  ");
         ctx.fillText(subInfo || "Chittagong University Alumni Member", 80, 422);
 
         ctx.fillStyle = "#0284c7";
