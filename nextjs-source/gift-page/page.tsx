@@ -906,14 +906,9 @@ export default function CUGiftPage() {
 
                 {/* 5. Head Office Visit Date (Strict 15-Day Lock, Guaranteed DD/MM/YYYY Format) */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Head Office Visit Date (Day / Month / Year) <span className="text-red-500">*</span>
-                    </label>
-                    <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
-                      21/11/2026 to 06/12/2026 (Excl. Fridays)
-                    </span>
-                  </div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Head Office Visit Date (Day / Month / Year) <span className="text-red-500">*</span>
+                  </label>
 
                   {/* Quick Date Selector Pills (Excluding Fridays, Showing Day, Month, Year clearly) */}
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 mb-3">
@@ -943,14 +938,9 @@ export default function CUGiftPage() {
 
                 {/* 6. Preferred Time Slot ("somoi icca moto select kora jabe") */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Preferred Time Slot <span className="text-red-500">*</span>
-                    </label>
-                    <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
-                      Office Hours: 9:30 AM – 6:00 PM (2-Hour Slots)
-                    </span>
-                  </div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                    Preferred Time Slot <span className="text-red-500">*</span>
+                  </label>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                     {PRESET_TIME_SLOTS.map((slot) => {
