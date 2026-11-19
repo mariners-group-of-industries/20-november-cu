@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — CU Alumni Gift Pass & Office Visit Registrations</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/biniyog-club-logo.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QR Code Local Library -->
+  <script src="/js/qrcode.min.js"></script>
+  <!-- Firebase App & Firestore SDKs (v10 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900 selection:bg-sky-600 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. LOGIN SCREEN (Visible until authenticated) -->
+  <!-- ========================================================================= -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950">
+    <div class="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl border border-slate-200">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 mb-3 shadow-sm">
+          <img src="/images/biniyog-club-logo.png" alt="Biniyog Club" class="w-10 h-10 object-contain" />
+        </div>
+        <div class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-[11px] font-bold uppercase tracking-wider mb-2">
+          Administrative Portal
+        </div>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">CU Alumni Gift Roster</h1>
+        <p class="text-xs text-slate-500 mt-1">Please sign in to access bookings &amp; download reports</p>
+      </div>
+
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+            Admin Username
+          </label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+            <input
+              type="text"
+              id="adminUserInput"
+              required
+              autocomplete="username"
+              placeholder="e.g. admin"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+            Password
+          </label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+            <input
+              type="password"
+              id="adminPassInput"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+            />
+          </div>
+        </div>
+
+        <div id="loginError" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-red-600 shrink-0"></i>
+          <span id="loginErrorText">Invalid username or password.</span>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-md shadow-sky-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
+        >
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Sign In to Admin Panel</span>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
+        Mariners Group &amp; Biniyog Club • Internal Security Protected
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. DASHBOARD VIEW (Shown when authenticated) -->
+  <!-- ========================================================================= -->
+  <div id="dashboardView" class="hidden min-h-screen flex flex-col">
+
+    <!-- Top Admin Header -->
+    <header class="bg-[#0c1e33] text-white border-b border-slate-800 sticky top-0 z-40 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <img src="/images/biniyog-club-logo.png" alt="Biniyog Club" class="w-9 h-9 object-contain bg-white rounded-xl p-1" />
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-extrabold text-white tracking-tight">CU Alumni Day 2026</span>
+              <span class="text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                Admin Panel
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400">VIP Gift Registrations &amp; Office Visit Management</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="/"
+            target="_blank"
+            class="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 transition-colors"
+          >
+            <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span>View Public Form</span>
+          </a>
+
+          <div class="flex items-center gap-2 pl-2 border-l border-slate-700">
+            <span class="text-xs font-semibold text-slate-300 hidden md:inline">Logged in as <strong>admin</strong></span>
+            <button
+              id="logoutBtn"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+            >
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+      <!-- Stat Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 1. Total -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Total Bookings</span>
+            <i data-lucide="users" class="w-4 h-4 text-sky-600"></i>
+          </div>
+          <div id="statTotal" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-mono">0</div>
+          <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+            <i data-lucide="check-circle" class="w-3 h-3"></i> Confirmed digital passes
+          </p>
+        </div>
+
+        <!-- 2. Today -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Registered Today</span>
+            <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+          </div>
+          <div id="statToday" class="text-2xl sm:text-3xl font-black text-emerald-700 mt-2 font-mono">0</div>
+          <p class="text-[11px] text-slate-400 font-medium mt-1">Live registration count</p>
+        </div>
+
+        <!-- 3. Top Visit Date -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Top Visit Date</span>
+            <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i>
+          </div>
+          <div id="statTopDate" class="text-base sm:text-lg font-black text-slate-900 mt-2 truncate">--</div>
+          <p class="text-[11px] text-slate-400 font-medium mt-1">Most preferred office visit day</p>
+        </div>
+
+        <!-- 4. Email Status -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Notification Target</span>
+            <i data-lucide="mail" class="w-4 h-4 text-sky-600"></i>
+          </div>
+          <div class="text-xs sm:text-sm font-bold text-sky-900 mt-2 truncate font-mono">it1@marinersgroup.com.bd</div>
+          <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+            SMTP Active &amp; Verified
+          </p>
+        </div>
+      </div>
+
+      <!-- Action & Filter Bar -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <!-- Search -->
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, mobile, reference ID, department, or batch..."
+            class="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm focus:bg-white focus:border-sky-500 focus:outline-none"
+          />
+        </div>
+
+        <!-- Date Filter -->
+        <select
+          id="dateFilter"
+          class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 font-medium focus:outline-none focus:border-sky-500 cursor-pointer"
+        >
+          <option value="">All Visit Dates</option>
+          <!-- Dynamic options populated in JS -->
+        </select>
+
+        <!-- Time Slot Filter -->
+        <select
+          id="slotFilter"
+          class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 font-medium focus:outline-none focus:border-sky-500 cursor-pointer"
+        >
+          <option value="">All Time Slots</option>
+          <option value="09:30 AM – 11:30 AM">09:30 AM – 11:30 AM</option>
+          <option value="11:30 AM – 01:30 PM">11:30 AM – 01:30 PM</option>
+          <option value="01:30 PM – 03:30 PM">01:30 PM – 03:30 PM</option>
+          <option value="02:00 PM – 04:00 PM">02:00 PM – 04:00 PM</option>
+          <option value="04:00 PM – 06:00 PM">04:00 PM – 06:00 PM</option>
+          <option value="Custom">Custom / Flexible</option>
+        </select>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2">
+          <!-- Refresh -->
+          <button
+            id="refreshBtn"
+            type="button"
+            title="Refresh Table Data"
+            class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-all cursor-pointer flex items-center justify-center"
+          >
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Download Excel (CSV) -->
+          <button
+            id="exportExcelBtn"
+            type="button"
+            class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm inline-flex items-center gap-2 transition-all cursor-pointer active:scale-95"
+          >
+            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+            <span>Export to Excel (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+            <span>Alumni Booking Records</span>
+            <span id="filteredCountBadge" class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-mono text-[11px]">0 records</span>
+          </div>
+          <div class="text-[11px] text-slate-400">
+            Click any row to inspect digital voucher &amp; QR code
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                <th class="py-3 px-4">#</th>
+                <th class="py-3 px-4">Ref ID</th>
+                <th class="py-3 px-4">Alumnus Name</th>
+                <th class="py-3 px-4">Mobile Number</th>
+                <th class="py-3 px-4">Dept &amp; Batch</th>
+                <th class="py-3 px-4">Address / Org</th>
+                <th class="py-3 px-4">Visit Date</th>
+                <th class="py-3 px-4">Time Slot</th>
+                <th class="py-3 px-4">Registered At</th>
+                <th class="py-3 px-4 text-center">Status</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTableBody" class="divide-y divide-slate-100 text-slate-700 font-medium">
+              <tr>
+                <td colspan="11" class="py-12 text-center text-slate-400">
+                  <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-400 mb-2">
+                    <i data-lucide="inbox" class="w-5 h-5"></i>
+                  </div>
+                  <p class="text-xs font-semibold">Loading registered bookings...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MODAL: PASS & QR DETAILS -->
+  <!-- ========================================================================= -->
+  <div id="voucherModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+      <button
+        id="closeModalBtn"
+        type="button"
+        class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center pb-4 border-b border-slate-100">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200 inline-block mb-1">
+          CU Alumni Executive Gift Voucher
+        </span>
+        <h3 id="modalName" class="text-xl font-black text-slate-900">Name</h3>
+        <p id="modalSub" class="text-xs text-slate-500 mt-0.5">Dept • Batch</p>
+      </div>
+
+      <div class="py-4 space-y-3 text-xs">
+        <div class="p-3 bg-slate-50 rounded-xl flex items-center justify-between font-mono">
+          <span class="text-slate-500 font-semibold uppercase text-[10px]">Reference Number</span>
+          <strong id="modalRef" class="text-sky-700 text-base font-bold">GIFT-XXXX</strong>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="p-3 bg-sky-50/70 border border-sky-100 rounded-xl">
+            <span class="text-[10px] font-bold uppercase text-sky-800 block mb-0.5">Visit Date (DD/MM/YYYY)</span>
+            <strong id="modalDate" class="text-slate-900 text-xs block font-bold font-mono">22/11/2026</strong>
+          </div>
+          <div class="p-3 bg-sky-50/70 border border-sky-100 rounded-xl">
+            <span class="text-[10px] font-bold uppercase text-sky-800 block mb-0.5">Time Slot</span>
+            <strong id="modalTime" class="text-slate-900 text-xs block font-bold">09:30 AM – 11:30 AM</strong>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Contact Number:</span>
+            <strong id="modalPhone" class="text-slate-900 font-mono">017XXXXXXXX</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Address / Org:</span>
+            <strong id="modalAddress" class="text-slate-900">Uttara, Dhaka</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Created At:</span>
+            <span id="modalCreated" class="text-slate-600 font-mono text-[11px]">2026-11-19</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl">
+          <div id="modalQrContainer" class="w-32 h-32 flex items-center justify-center bg-white p-1">
+            <img id="modalQrImg" class="w-full h-full object-contain" alt="QR Code" />
+          </div>
+          <span class="text-[10px] font-bold text-slate-400 mt-1 uppercase font-mono">Reception Scan Pass</span>
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+        <button
+          id="modalCloseFooterBtn"
+          type="button"
+          class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. LOGIC SCRIPT -->
+  <!-- ========================================================================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1oGyyF-ZQyC5MiIV1VkMq3iFTTr4UTuk",
+      authDomain: "november-cu.firebaseapp.com",
+      projectId: "november-cu",
+      storageBucket: "november-cu.firebasestorage.app",
+      messagingSenderId: "829969595607",
+      appId: "1:829969595607:web:f1842b88973bd518004492",
+      measurementId: "G-L6SQ0881HS"
+    };
+
+    let firebaseDb = null;
+    try {
+      if (typeof firebase !== "undefined" && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        firebaseDb = firebase.firestore();
+      }
+    } catch (e) {
+      console.warn("Firestore init in admin:", e);
+    }
+
+    // Working Dates (Excluding Fridays)
+    const VISIT_DATES = [
+      { val: "2026-11-21", dmy: "21/11/2026", label: "21 Nov 2026 (Sat)" },
+      { val: "2026-11-22", dmy: "22/11/2026", label: "22 Nov 2026 (Sun)" },
+      { val: "2026-11-23", dmy: "23/11/2026", label: "23 Nov 2026 (Mon)" },
+      { val: "2026-11-24", dmy: "24/11/2026", label: "24 Nov 2026 (Tue)" },
+      { val: "2026-11-25", dmy: "25/11/2026", label: "25 Nov 2026 (Wed)" },
+      { val: "2026-11-26", dmy: "26/11/2026", label: "26 Nov 2026 (Thu)" },
+      { val: "2026-11-28", dmy: "28/11/2026", label: "28 Nov 2026 (Sat)" },
+      { val: "2026-11-29", dmy: "29/11/2026", label: "29 Nov 2026 (Sun)" },
+      { val: "2026-11-30", dmy: "30/11/2026", label: "30 Nov 2026 (Mon)" },
+      { val: "2026-12-01", dmy: "01/12/2026", label: "01 Dec 2026 (Tue)" },
+      { val: "2026-12-02", dmy: "02/12/2026", label: "02 Dec 2026 (Wed)" },
+      { val: "2026-12-03", dmy: "03/12/2026", label: "03 Dec 2026 (Thu)" },
+      { val: "2026-12-05", dmy: "05/12/2026", label: "05 Dec 2026 (Sat)" },
+      { val: "2026-12-06", dmy: "06/12/2026", label: "06 Dec 2026 (Sun)" },
+    ];
+
+    // Populate date filter dropdown
+    const dateFilterEl = document.getElementById("dateFilter");
+    VISIT_DATES.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d.val;
+      opt.textContent = `${d.dmy} — ${d.label}`;
+      dateFilterEl.appendChild(opt);
+    });
+
+    // State
+    let allBookings = [];
+    let activeBooking = null;
+
+    // -------------------------------------------------------------------------
+    // AUTHENTICATION LOGIC (admin / amdin2244 or admin2244)
+    // -------------------------------------------------------------------------
+    const AUTH_KEY = "cu_gift_admin_auth";
+
+    function isAuthenticated() {
+      return sessionStorage.getItem(AUTH_KEY) === "true";
+    }
+
+    function setAuthenticated(val) {
+      if (val) sessionStorage.setItem(AUTH_KEY, "true");
+      else sessionStorage.removeItem(AUTH_KEY);
+      renderAuthView();
+    }
+
+    function renderAuthView() {
+      const isAuth = isAuthenticated();
+      document.getElementById("loginScreen").classList.toggle("hidden", isAuth);
+      document.getElementById("dashboardView").classList.toggle("hidden", !isAuth);
+      if (isAuth) {
+        loadBookings();
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const user = document.getElementById("adminUserInput").value.trim();
+      const pass = document.getElementById("adminPassInput").value.trim();
+
+      // Accept admin with password 'amdin2244' (per prompt) or 'admin2244'
+      if (user === "admin" && (pass === "amdin2244" || pass === "admin2244")) {
+        document.getElementById("loginError").classList.add("hidden");
+        setAuthenticated(true);
+      } else {
+        document.getElementById("loginError").classList.remove("hidden");
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      setAuthenticated(false);
+    });
+
+    // -------------------------------------------------------------------------
+    // DATA FETCHING & RENDERING
+    // -------------------------------------------------------------------------
+    async function loadBookings() {
+      const tableBody = document.getElementById("bookingsTableBody");
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="11" class="py-12 text-center text-slate-400">
+            <div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-500 animate-spin mb-2">
+              <i data-lucide="loader-2" class="w-4 h-4"></i>
+            </div>
+            <p class="text-xs font-semibold">Refreshing records...</p>
+          </td>
+        </tr>
+      `;
+      lucide.createIcons();
+
+      let records = [];
+      const map = new Map();
+
+      // 1. Try local server API
+      try {
+        const res = await fetch("/api/gift");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bookings && Array.isArray(data.bookings)) {
+            data.bookings.forEach(b => {
+              if (b.referenceNo) map.set(b.referenceNo, b);
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Local API fetch error:", err);
+      }
+
+      // 2. Try Firestore collection
+      if (firebaseDb) {
+        try {
+          const snap = await firebaseDb.collection("gift_bookings").get();
+          snap.forEach(doc => {
+            const b = doc.data();
+            if (b.referenceNo) {
+              // merge, preference to newest
+              map.set(b.referenceNo, { ...(map.get(b.referenceNo) || {}), ...b });
+            }
+          });
+        } catch (fbErr) {
+          console.warn("Firestore fetch error:", fbErr);
+        }
+      }
+
+      allBookings = Array.from(map.values()).sort((a, b) => {
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      });
+
+      renderTable();
+      updateStats();
+    }
+
+    function formatDMY(dateStr) {
+      if (!dateStr) return "";
+      const p = dateStr.split("-");
+      if (p.length === 3) return `${p[2]}/${p[1]}/${p[0]}`;
+      return dateStr;
+    }
+
+    function updateStats() {
+      document.getElementById("statTotal").textContent = allBookings.length;
+
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const todayCount = allBookings.filter(b => (b.createdAt || "").startsWith(todayStr)).length;
+      document.getElementById("statToday").textContent = todayCount;
+
+      // Count dates
+      const dateCounts = {};
+      allBookings.forEach(b => {
+        if (b.visitDate) {
+          dateCounts[b.visitDate] = (dateCounts[b.visitDate] || 0) + 1;
+        }
+      });
+      let topDate = "--";
+      let maxCount = 0;
+      for (const [d, count] of Object.entries(dateCounts)) {
+        if (count > maxCount) {
+          maxCount = count;
+          topDate = `${formatDMY(d)} (${count} guests)`;
+        }
+      }
+      document.getElementById("statTopDate").textContent = topDate;
+    }
+
+    function getFilteredBookings() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const dateVal = document.getElementById("dateFilter").value;
+      const slotVal = document.getElementById("slotFilter").value;
+
+      return allBookings.filter(b => {
+        // Query match
+        if (q) {
+          const hay = `${b.fullName || ''} ${b.mobileNumber || ''} ${b.referenceNo || ''} ${b.department || ''} ${b.batch || ''} ${b.shortAddress || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+
+        // Date filter
+        if (dateVal && b.visitDate !== dateVal) return false;
+
+        // Slot filter
+        if (slotVal) {
+          if (slotVal === "Custom") {
+            if (!b.visitTimeSlot || !b.visitTimeSlot.toLowerCase().includes("custom") && !b.customTime) return false;
+          } else {
+            if (b.visitTimeSlot !== slotVal) return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    function renderTable() {
+      const bookings = getFilteredBookings();
+      const tableBody = document.getElementById("bookingsTableBody");
+      document.getElementById("filteredCountBadge").textContent = `${bookings.length} of ${allBookings.length} records`;
+
+      if (bookings.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="11" class="py-12 text-center text-slate-400">
+              <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-400 mb-2">
+                <i data-lucide="search-x" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-semibold">No alumni bookings match the selected criteria.</p>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      tableBody.innerHTML = bookings.map((b, idx) => {
+        const cleanMobile = (b.mobileNumber || "").replace(/[^0-9+]/g, "");
+        const waLink = `https://wa.me/88${cleanMobile.replace(/^(\+88|88|0)/, "0")}`;
+        const createdDate = b.createdAt ? new Date(b.createdAt).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" }) : "N/A";
+
+        return `
+          <tr class="hover:bg-sky-50/60 transition-colors group cursor-pointer" onclick="openVoucherModal('${b.referenceNo}')">
+            <td class="py-3 px-4 text-slate-400 font-mono text-[11px]">${idx + 1}</td>
+            <td class="py-3 px-4 font-mono font-bold text-sky-700 whitespace-nowrap">
+              <span class="bg-sky-50 px-2 py-0.5 rounded border border-sky-200">${b.referenceNo || 'N/A'}</span>
+            </td>
+            <td class="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">${b.fullName || 'N/A'}</td>
+            <td class="py-3 px-4 whitespace-nowrap font-mono text-[11px]" onclick="event.stopPropagation()">
+              <a href="tel:${b.mobileNumber}" class="text-slate-800 hover:text-sky-600 hover:underline">${b.mobileNumber || 'N/A'}</a>
+              <a href="${waLink}" target="_blank" title="WhatsApp Chat" class="ml-1 text-emerald-600 hover:text-emerald-700 inline-block align-middle">
+                💬
+              </a>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <span class="block text-slate-900 font-semibold">${b.department || '—'}</span>
+              ${b.batch ? `<span class="text-[10px] text-slate-500 font-mono">Batch ${b.batch}</span>` : ''}
+            </td>
+            <td class="py-3 px-4 max-w-[160px] truncate text-slate-600" title="${b.shortAddress || ''}">
+              ${b.shortAddress || '—'}
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap font-mono font-bold text-sky-800">
+              ${formatDMY(b.visitDate)}
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap text-[11px] text-slate-700 font-medium">
+              ${b.visitTimeSlot || '—'}
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap text-[10px] text-slate-400 font-mono">
+              ${createdDate}
+            </td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Confirmed
+              </span>
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap" onclick="event.stopPropagation()">
+              <button
+                type="button"
+                onclick="openVoucherModal('${b.referenceNo}')"
+                class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-[11px] font-bold transition-all cursor-pointer"
+              >
+                View Pass ↗
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    // Filter Listeners
+    document.getElementById("searchInput").addEventListener("input", renderTable);
+    document.getElementById("dateFilter").addEventListener("change", renderTable);
+    document.getElementById("slotFilter").addEventListener("change", renderTable);
+    document.getElementById("refreshBtn").addEventListener("click", loadBookings);
+
+    // -------------------------------------------------------------------------
+    // EXPORT TO EXCEL (CSV WITH UTF-8 BOM)
+    // -------------------------------------------------------------------------
+    document.getElementById("exportExcelBtn").addEventListener("click", () => {
+      const records = getFilteredBookings();
+      if (records.length === 0) {
+        alert("No records to export.");
+        return;
+      }
+
+      const headers = [
+        "Pass Reference ID",
+        "Full Name",
+        "Mobile Number",
+        "Department / Faculty",
+        "Batch",
+        "Short Address / Organization",
+        "Confirmed Visit Date (DD/MM/YYYY)",
+        "Preferred Time Slot",
+        "Registration Timestamp",
+        "Status",
+        "Gift Collection Venue",
+        "Committed Office Location"
+      ];
+
+      function escapeCsv(val) {
+        if (val === null || val === undefined) return '""';
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+      }
+
+      const rows = records.map(b => [
+        escapeCsv(b.referenceNo),
+        escapeCsv(b.fullName),
+        escapeCsv(b.mobileNumber),
+        escapeCsv(b.department || ""),
+        escapeCsv(b.batch ? `Batch ${b.batch}` : ""),
+        escapeCsv(b.shortAddress || ""),
+        escapeCsv(formatDMY(b.visitDate)),
+        escapeCsv(b.visitTimeSlot || ""),
+        escapeCsv(b.createdAt || ""),
+        escapeCsv(b.status || "confirmed"),
+        escapeCsv("Friends Club Field, Sector 3, Uttara, Dhaka"),
+        escapeCsv("10th Floor, MG SAM Center, Mohakhali, Dhaka")
+      ]);
+
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\r\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const today = new Date().toISOString().slice(0, 10);
+      link.href = URL.createObjectURL(blob);
+      link.download = `CU_Alumni_Gift_Bookings_${today}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // -------------------------------------------------------------------------
+    // VOUCHER MODAL
+    // -------------------------------------------------------------------------
+    window.openVoucherModal = function(refNo) {
+      const b = allBookings.find(x => x.referenceNo === refNo);
+      if (!b) return;
+
+      activeBooking = b;
+      document.getElementById("modalName").textContent = b.fullName || "N/A";
+      document.getElementById("modalRef").textContent = b.referenceNo;
+      document.getElementById("modalSub").textContent = [b.department, b.batch ? `Batch ${b.batch}` : "", b.shortAddress].filter(Boolean).join(" • ") || "CU Alumni Society Member";
+      document.getElementById("modalDate").textContent = formatDMY(b.visitDate);
+      document.getElementById("modalTime").textContent = b.visitTimeSlot;
+      document.getElementById("modalPhone").textContent = b.mobileNumber;
+      document.getElementById("modalAddress").textContent = b.shortAddress || "Uttara, Dhaka";
+      document.getElementById("modalCreated").textContent = b.createdAt ? new Date(b.createdAt).toLocaleString("en-GB") : "N/A";
+
+      const qrImg = document.getElementById("modalQrImg");
+      const qrContainer = document.getElementById("modalQrContainer");
+
+      if (b.qrCodeDataUrl) {
+        qrImg.style.display = "block";
+        qrImg.src = b.qrCodeDataUrl;
+      } else if (typeof QRCode !== "undefined") {
+        qrImg.style.display = "none";
+        qrContainer.innerHTML = "";
+        const qrPayload = JSON.stringify({
+          ref: b.referenceNo,
+          name: b.fullName,
+          phone: b.mobileNumber,
+          date: formatDMY(b.visitDate),
+          time: b.visitTimeSlot,
+          office: "10th Floor, MG SAM Center, Mohakhali, Dhaka"
+        });
+        new QRCode(qrContainer, {
+          text: qrPayload,
+          width: 120,
+          height: 120,
+          colorDark: "#0c4a6e",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      document.getElementById("voucherModal").classList.remove("hidden");
+    };
+
+    document.getElementById("closeModalBtn").addEventListener("click", () => {
+      document.getElementById("voucherModal").classList.add("hidden");
+    });
+    document.getElementById("modalCloseFooterBtn").addEventListener("click", () => {
+      document.getElementById("voucherModal").classList.add("hidden");
+    });
+    document.getElementById("voucherModal").addEventListener("click", (e) => {
+      if (e.target.id === "voucherModal") {
+        document.getElementById("voucherModal").classList.add("hidden");
+      }
+    });
+
+    // Start with auth check
+    renderAuthView();
+  </script>
+</body>
+</html>

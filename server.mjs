@@ -11,9 +11,46 @@ const PORT = process.env.PORT || 3001;
 
 let NodeQRCode = null;
 try {
-  NodeQRCode = require('D:/2nd November/node_modules/qrcode');
+  NodeQRCode = require('qrcode');
 } catch (e) {
-  console.warn('QRCode module not loaded:', e.message);
+  try {
+    NodeQRCode = require('D:/2nd November/node_modules/qrcode');
+  } catch (err) {
+    console.warn('QRCode module not loaded:', err.message);
+  }
+}
+
+let nodemailer = null;
+try {
+  nodemailer = require('nodemailer');
+} catch (e) {
+  try {
+    nodemailer = require('D:/2nd November/node_modules/nodemailer');
+  } catch (err) {
+    console.warn('Nodemailer module not loaded:', err.message);
+  }
+}
+
+// SMTP Configuration (it1@marinersgroup.com.bd via Titan Email / Hostinger)
+const SMTP_CONFIG = {
+  host: 'smtp.titan.email',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'it1@marinersgroup.com.bd',
+    pass: 'ITmgMAIL@!1'
+  },
+  tls: { rejectUnauthorized: false }
+};
+
+let mailTransporter = null;
+if (nodemailer) {
+  try {
+    mailTransporter = nodemailer.createTransport(SMTP_CONFIG);
+    console.log('[Email] Nodemailer configured for it1@marinersgroup.com.bd');
+  } catch (err) {
+    console.warn('[Email] Transporter error:', err.message);
+  }
 }
 
 const DATA_DIR = path.join(__dirname, 'data');
@@ -76,6 +113,137 @@ async function syncToFirebaseFirestore(booking) {
   } catch (e) {}
 }
 
+function formatVerbalDate(dateStr) {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const mIdx = parseInt(parts[1], 10) - 1;
+    return `${parts[2]} ${monthNames[mIdx] || parts[1]} ${parts[0]}`;
+  }
+  return dateStr;
+}
+
+// Send Instant Email Notification to it1@marinersgroup.com.bd
+async function sendBookingNotificationEmail(booking) {
+  if (!mailTransporter) {
+    console.warn('[Email] Transporter not ready, skipping email notification.');
+    return;
+  }
+
+  const verbalDate = formatVerbalDate(booking.visitDate);
+  const subject = `🎁 New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
+        .card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .header { background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%); color: #ffffff; padding: 24px; text-align: center; }
+        .badge { display: inline-block; background: #38bdf8; color: #082f49; font-weight: bold; font-size: 11px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .title { margin: 0; font-size: 20px; font-weight: 800; }
+        .subtitle { margin: 4px 0 0; font-size: 12px; opacity: 0.9; }
+        .content { padding: 24px; }
+        .ref-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .ref-label { font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; }
+        .ref-val { font-size: 20px; font-weight: 800; color: #15803d; font-family: monospace; }
+        .table-data { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .table-data td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        .table-data td.lbl { width: 38%; font-weight: 600; color: #64748b; background: #f8fafc; }
+        .table-data td.val { font-weight: 700; color: #0f172a; }
+        .highlight-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 14px; margin-bottom: 20px; }
+        .highlight-title { font-size: 11px; font-weight: 700; color: #0369a1; text-transform: uppercase; margin-bottom: 6px; }
+        .highlight-text { font-size: 13px; font-weight: 700; color: #0c4a6e; }
+        .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 24px; text-align: center; font-size: 11px; color: #94a3b8; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="header">
+          <span class="badge">Official Registration Alert</span>
+          <h1 class="title">CU Alumni Day 2026 Gift Pass</h1>
+          <p class="subtitle">Chittagong University Alumni Society Uttara &amp; Biniyog Club</p>
+        </div>
+        <div class="content">
+          <div class="ref-box">
+            <div>
+              <div class="ref-label">Pass Reference ID</div>
+              <div class="ref-val">${booking.referenceNo}</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">Confirmed</span>
+            </div>
+          </div>
+
+          <table class="table-data">
+            <tr>
+              <td class="lbl">Alumnus Name</td>
+              <td class="val">${booking.fullName}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Mobile Number</td>
+              <td class="val"><a href="tel:${booking.mobileNumber}" style="color: #0284c7; text-decoration: none;">${booking.mobileNumber}</a></td>
+            </tr>
+            <tr>
+              <td class="lbl">Department / Faculty</td>
+              <td class="val">${booking.department || 'Not specified'}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Batch</td>
+              <td class="val">${booking.batch ? 'Batch ' + booking.batch : 'Not specified'}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Address / Workplace</td>
+              <td class="val">${booking.shortAddress || 'Not specified'}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Confirmed Visit Date</td>
+              <td class="val" style="color: #0284c7; font-weight: 800;">${booking.visitDate} (${verbalDate})</td>
+            </tr>
+            <tr>
+              <td class="lbl">Preferred Time Slot</td>
+              <td class="val">${booking.visitTimeSlot}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Registered At</td>
+              <td class="val" style="font-size: 11px; font-family: monospace;">${booking.createdAt}</td>
+            </tr>
+          </table>
+
+          <div class="highlight-box">
+            <div class="highlight-title">🎁 Gift Collection Point (At Event)</div>
+            <div class="highlight-text">Friends Club Field, Sector 3, Uttara, Dhaka</div>
+            <div class="highlight-title" style="margin-top: 10px;">🏢 Committed Head Office Visit Destination</div>
+            <div class="highlight-text">10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Mohakhali, Dhaka 1212</div>
+          </div>
+        </div>
+        <div class="footer">
+          This notification was automatically dispatched to <strong>it1@marinersgroup.com.bd</strong> upon registration.<br>
+          © 2026 Biniyog Club &amp; Mariners Group Ecosystem
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const info = await mailTransporter.sendMail({
+      from: '"CU Alumni Gift Notification" <it1@marinersgroup.com.bd>',
+      to: 'it1@marinersgroup.com.bd',
+      replyTo: 'it1@marinersgroup.com.bd',
+      subject,
+      text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
+      html
+    });
+    console.log(`[Email] Notification delivered to it1@marinersgroup.com.bd (Message ID: ${info.messageId})`);
+  } catch (err) {
+    console.error(`[Email] Failed to send notification email:`, err.message);
+  }
+}
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -92,6 +260,17 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
+  // CORS Headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   let pathname = reqUrl.pathname;
 
@@ -187,6 +366,9 @@ const server = http.createServer((req, res) => {
           // Asynchronously sync to Firebase Firestore
           syncToFirebaseFirestore(booking);
 
+          // Asynchronously dispatch Email Notification to it1@marinersgroup.com.bd
+          sendBookingNotificationEmail(booking);
+
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             success: true,
@@ -208,9 +390,11 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Static File Serving
+  // Handle Static File Serving & Admin Route Rewrites
   if (pathname === '/' || pathname === '') {
     pathname = '/index.html';
+  } else if (pathname === '/admin') {
+    pathname = '/admin.html';
   }
 
   const filePath = path.join(__dirname, pathname);

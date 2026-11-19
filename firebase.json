@@ -9,6 +9,16 @@
       "server.mjs",
       "data/**",
       "nextjs-source/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/admin",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }

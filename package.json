@@ -1,0 +1,14 @@
+{
+  "name": "cu-alumni-gift-booking",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CU Alumni Society Uttara & Biniyog Club VIP Gift Pass Registration",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16",
+    "qrcode": "^1.5.4"
+  }
+}
