@@ -37,7 +37,9 @@ function formatVerbalDate(dateStr) {
 }
 
 async function sendNotificationEmail(booking) {
-  if (!mailTransporter) return false;
+  if (!mailTransporter) {
+    return { sent: false, error: 'mailTransporter is null' };
+  }
   const verbalDate = formatVerbalDate(booking.visitDate);
   const subject = `🎁 New CU Alumni Gift Registration: ${booking.fullName} (${booking.referenceNo})`;
 
@@ -146,10 +148,36 @@ async function sendNotificationEmail(booking) {
       html
     });
     console.log(`[Email] Notification delivered to it1@marinersgroup.com.bd (ID: ${info.messageId})`);
-    return true;
+    return { sent: true, messageId: info.messageId };
   } catch (err) {
     console.error('[Email] Failed to send notification email:', err.message);
-    return false;
+    // Fallback: try port 587 if 465 failed
+    try {
+      console.log('[Email] Retrying via port 587 STARTTLS...');
+      const fallbackTransporter = nodemailer.createTransport({
+        host: 'smtp.titan.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'it1@marinersgroup.com.bd',
+          pass: 'ITmgMAIL@!1'
+        },
+        tls: { rejectUnauthorized: false },
+        connectionTimeout: 10000
+      });
+      const info2 = await fallbackTransporter.sendMail({
+        from: '"CU Alumni Gift Notification" <it1@marinersgroup.com.bd>',
+        to: 'it1@marinersgroup.com.bd',
+        replyTo: 'it1@marinersgroup.com.bd',
+        subject,
+        html
+      });
+      console.log(`[Email] Fallback 587 delivered (ID: ${info2.messageId})`);
+      return { sent: true, messageId: info2.messageId, via: 'port-587' };
+    } catch (err2) {
+      console.error('[Email] Fallback 587 also failed:', err2.message);
+      return { sent: false, error465: err.message, error587: err2.message };
+    }
   }
 }
 
@@ -313,12 +341,13 @@ export default async function handler(req, res) {
       await saveToSupabase(booking);
 
       // 2. Dispatch Email Notification immediately to it1@marinersgroup.com.bd
-      await sendNotificationEmail(booking);
+      const emailStatus = await sendNotificationEmail(booking);
 
       return res.status(200).json({
         success: true,
         message: 'Head office visit booking confirmed! Show this pass to claim your gift.',
-        booking
+        booking,
+        emailStatus
       });
     } catch (err) {
       console.error('API Error:', err);
