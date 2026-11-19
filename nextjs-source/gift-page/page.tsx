@@ -789,8 +789,7 @@ export default function CUGiftPage() {
           <div className="space-y-8">
             {/* Centered Hero Header */}
             <div className="text-center space-y-2 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs font-extrabold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-sky-600" />
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs font-extrabold uppercase tracking-wider">
                 <span>Scan, Commit and Win your Gift</span>
               </div>
 
