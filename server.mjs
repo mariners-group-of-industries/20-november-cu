@@ -2,10 +2,19 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
+const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3001;
+
+let NodeQRCode = null;
+try {
+  NodeQRCode = require('D:/2nd November/node_modules/qrcode');
+} catch (e) {
+  console.warn('QRCode module not loaded:', e.message);
+}
 
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'gift_bookings.json');
@@ -59,7 +68,7 @@ const server = http.createServer((req, res) => {
     if (req.method === 'POST') {
       let body = '';
       req.on('data', chunk => { body += chunk; });
-      req.on('end', () => {
+      req.on('end', async () => {
         try {
           const data = JSON.parse(body || '{}');
           const { fullName, mobileNumber, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
@@ -98,6 +107,31 @@ const server = http.createServer((req, res) => {
           const timeSlot = (customTime && customTime.trim()) || (visitTimeSlot && visitTimeSlot.trim()) || '09:30 AM – 11:30 AM';
           const refNo = `GIFT-${Math.floor(1000 + Math.random() * 9000)}`;
 
+          // Generate QR code data URL
+          let qrDataUrl = '';
+          if (NodeQRCode) {
+            try {
+              const qrPayload = JSON.stringify({
+                ref: refNo,
+                name: fullName.trim(),
+                phone: cleanMobile,
+                date: visitDate,
+                time: timeSlot,
+                event: 'CU Alumni Day 2026 Gift Pass',
+                pickup: 'Friends Club Field, Sector 3, Uttara, Dhaka',
+                office: '10th Floor, MG SAM Center, Mohakhali, Dhaka',
+                map: 'https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9'
+              });
+              qrDataUrl = await NodeQRCode.toDataURL(qrPayload, {
+                width: 280,
+                margin: 1,
+                color: { dark: '#0c4a6e', light: '#ffffff' }
+              });
+            } catch (qrErr) {
+              console.error('QR generation error in server:', qrErr);
+            }
+          }
+
           const booking = {
             id: 'bk_' + Date.now(),
             referenceNo: refNo,
@@ -109,6 +143,7 @@ const server = http.createServer((req, res) => {
             visitDate,
             visitTimeSlot: timeSlot,
             customTime: customTime ? customTime.trim() : undefined,
+            qrCodeDataUrl: qrDataUrl,
             status: 'confirmed',
             createdAt: new Date().toISOString()
           };

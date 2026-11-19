@@ -17,8 +17,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
-  <!-- QR Code CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <!-- QR Code Local Library -->
+  <script src="/js/qrcode.min.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -213,10 +213,12 @@
             </div>
           </div>
 
-          <!-- QR Code Canvas -->
+          <!-- QR Code Container -->
           <div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-200">
-            <canvas id="qrCanvas" class="w-24 h-24 rounded"></canvas>
-            <span class="text-[10px] text-slate-500 mt-1 font-mono font-semibold">
+            <div id="qrCodeContainer" class="w-28 h-28 flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-2xs p-1.5 overflow-hidden">
+              <img id="qrCodeImg" class="w-full h-full object-contain" alt="Gift Pass QR Code" />
+            </div>
+            <span class="text-[10px] text-slate-500 mt-2 font-mono font-bold tracking-wider">
               Scan at Reception
             </span>
           </div>
@@ -854,17 +856,28 @@
         phone: booking.mobileNumber,
         date: formatDMY(booking.visitDate),
         time: booking.visitTimeSlot,
-        event: "CU Day 2026 Gift",
-        location: "10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212",
+        event: "CU Alumni Day 2026 Gift Pass",
+        pickup: "Friends Club Field, Sector 3, Uttara, Dhaka",
+        office: "10th Floor, MG SAM Center, Mohakhali, Dhaka",
         map: "https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9",
       });
 
-      const qrCanvas = document.getElementById("qrCanvas");
-      QRCode.toCanvas(qrCanvas, qrPayload, {
-        width: 100,
-        margin: 1,
-        color: { dark: "#0c4a6e", light: "#ffffff" },
-      });
+      const qrImg = document.getElementById("qrCodeImg");
+      const qrContainer = document.getElementById("qrCodeContainer");
+
+      if (booking.qrCodeDataUrl) {
+        qrImg.src = booking.qrCodeDataUrl;
+      } else if (typeof QRCode !== "undefined") {
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, {
+          text: qrPayload,
+          width: 104,
+          height: 104,
+          colorDark: "#0c4a6e",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+      }
 
       // Confetti
       try {
@@ -1031,9 +1044,14 @@
         ctx.fillText("Helpdesk Hotline: +880 1335-149006  •  Brochure: brochure.marinersgroupbd.com", 110, 798);
 
         // QR Code
-        const qrCanvas = document.getElementById("qrCanvas");
-        if (qrCanvas) {
-          ctx.drawImage(qrCanvas, 380, 860, 240, 240);
+        const qrImageElement = document.getElementById("qrCodeImg");
+        const fallbackQrEl = document.querySelector("#qrCodeContainer img, #qrCodeContainer canvas");
+        const qrSource = (qrImageElement && qrImageElement.src && qrImageElement.src.startsWith("data:"))
+          ? qrImageElement
+          : fallbackQrEl;
+
+        if (qrSource) {
+          ctx.drawImage(qrSource, 380, 860, 240, 240);
           ctx.fillStyle = "#64748b";
           ctx.font = "bold 12px monospace";
           ctx.textAlign = "center";
