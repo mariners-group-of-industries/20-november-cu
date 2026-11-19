@@ -896,6 +896,7 @@
             designation: `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`,
             additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
             status: "approved",
+            email_sent: false,
             notes: JSON.stringify(booking)
           })
         });

@@ -5,24 +5,22 @@ import QRCode from 'qrcode';
 const SUPABASE_URL = 'https://avbqkacuvowqkmxknicu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YnFrYWN1dm93cWtteGtuaWN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzA3MDUzNCwiZXhwIjoyMTA4NjQ2NTM0fQ.Lplfj0I9rP3K88zYCbRG80Ot1ntb19VLnixWN5S2tTs';
 
-// Titan Email SMTP Config
-const SMTP_CONFIG = {
-  host: 'smtp.titan.email',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'it1@marinersgroup.com.bd',
-    pass: 'ITmgMAIL@!1'
-  },
-  tls: { rejectUnauthorized: false },
-  connectionTimeout: 10000
-};
-
-let mailTransporter = null;
-try {
-  mailTransporter = nodemailer.createTransport(SMTP_CONFIG);
-} catch (e) {
-  console.warn('Mail transporter error:', e);
+// Titan Email Fresh Transporter Factory (No persistent pool in serverless)
+function getFreshTransporter(port = 465) {
+  return nodemailer.createTransport({
+    host: 'smtp.titan.email',
+    port,
+    secure: port === 465,
+    auth: {
+      user: 'it1@marinersgroup.com.bd',
+      pass: 'ITmgMAIL@!1'
+    },
+    tls: { rejectUnauthorized: false },
+    pool: false, // CRITICAL: Disable pool in serverless to prevent stale socket reuse
+    connectionTimeout: 8000,
+    greetingTimeout: 8000,
+    socketTimeout: 8000
+  });
 }
 
 function formatVerbalDate(dateStr) {
@@ -37,9 +35,6 @@ function formatVerbalDate(dateStr) {
 }
 
 async function sendNotificationEmail(booking) {
-  if (!mailTransporter) {
-    return { sent: false, error: 'mailTransporter is null' };
-  }
   const verbalDate = formatVerbalDate(booking.visitDate);
   const subject = `🎁 New CU Alumni Gift Registration: ${booking.fullName} (${booking.referenceNo})`;
 
@@ -138,8 +133,11 @@ async function sendNotificationEmail(booking) {
     </html>
   `;
 
+  // Attempt 1: Port 465 (SSL) with fresh connection
+  let t465 = null;
   try {
-    const info = await mailTransporter.sendMail({
+    t465 = getFreshTransporter(465);
+    const info = await t465.sendMail({
       from: '"CU Alumni Gift Notification" <it1@marinersgroup.com.bd>',
       to: 'it1@marinersgroup.com.bd',
       replyTo: 'it1@marinersgroup.com.bd',
@@ -147,38 +145,51 @@ async function sendNotificationEmail(booking) {
       text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
       html
     });
-    console.log(`[Email] Notification delivered to it1@marinersgroup.com.bd (ID: ${info.messageId})`);
-    return { sent: true, messageId: info.messageId };
-  } catch (err) {
-    console.error('[Email] Failed to send notification email:', err.message);
-    // Fallback: try port 587 if 465 failed
+    console.log(`[Email] Notification delivered via port 465 (ID: ${info.messageId})`);
+    try { t465.close(); } catch (e) {}
+    await markSupabaseEmailSent(booking.referenceNo);
+    return { sent: true, port: 465, messageId: info.messageId };
+  } catch (err465) {
+    if (t465) { try { t465.close(); } catch (e) {} }
+    console.warn('[Email] Port 465 failed, trying port 587 STARTTLS...', err465.message);
+
+    // Attempt 2: Port 587 (STARTTLS) with fresh connection
+    let t587 = null;
     try {
-      console.log('[Email] Retrying via port 587 STARTTLS...');
-      const fallbackTransporter = nodemailer.createTransport({
-        host: 'smtp.titan.email',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'it1@marinersgroup.com.bd',
-          pass: 'ITmgMAIL@!1'
-        },
-        tls: { rejectUnauthorized: false },
-        connectionTimeout: 10000
-      });
-      const info2 = await fallbackTransporter.sendMail({
+      t587 = getFreshTransporter(587);
+      const info2 = await t587.sendMail({
         from: '"CU Alumni Gift Notification" <it1@marinersgroup.com.bd>',
         to: 'it1@marinersgroup.com.bd',
         replyTo: 'it1@marinersgroup.com.bd',
         subject,
+        text: `New CU Alumni Gift Pass: ${booking.fullName} (${booking.referenceNo})\nMobile: ${booking.mobileNumber}\nVisit Date: ${booking.visitDate} (${verbalDate})\nTime Slot: ${booking.visitTimeSlot}\nDept: ${booking.department || 'N/A'}\nBatch: ${booking.batch || 'N/A'}\nLocation: 10th Floor, MG SAM Center, Mohakhali`,
         html
       });
-      console.log(`[Email] Fallback 587 delivered (ID: ${info2.messageId})`);
-      return { sent: true, messageId: info2.messageId, via: 'port-587' };
-    } catch (err2) {
-      console.error('[Email] Fallback 587 also failed:', err2.message);
-      return { sent: false, error465: err.message, error587: err2.message };
+      console.log(`[Email] Notification delivered via port 587 (ID: ${info2.messageId})`);
+      try { t587.close(); } catch (e) {}
+      await markSupabaseEmailSent(booking.referenceNo);
+      return { sent: true, port: 587, messageId: info2.messageId };
+    } catch (err587) {
+      if (t587) { try { t587.close(); } catch (e) {} }
+      console.error('[Email] Port 587 also failed:', err587.message);
+      return { sent: false, error465: err465.message, error587: err587.message };
     }
   }
+}
+
+async function markSupabaseEmailSent(refNo) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/registrations?reference_no=eq.${encodeURIComponent(refNo)}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ email_sent: true })
+    });
+  } catch (e) {}
 }
 
 async function saveToSupabase(booking) {
@@ -192,6 +203,7 @@ async function saveToSupabase(booking) {
       designation: `CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`,
       additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
       status: 'approved',
+      email_sent: false,
       notes: JSON.stringify({
         event: 'cu_alumni_gift_2026',
         visitDate: booking.visitDate,

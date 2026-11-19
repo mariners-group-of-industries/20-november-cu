@@ -244,6 +244,70 @@ async function sendBookingNotificationEmail(booking) {
   }
 }
 
+// Permanent Supabase Email Queue Listener & Dispatched Fail-Safe
+const SUPABASE_URL = 'https://avbqkacuvowqkmxknicu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YnFrYWN1dm93cWtteGtuaWN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzA3MDUzNCwiZXhwIjoyMTA4NjQ2NTM0fQ.Lplfj0I9rP3K88zYCbRG80Ot1ntb19VLnixWN5S2tTs';
+
+let isProcessing = false;
+async function processUnsentSupabaseEmails() {
+  if (isProcessing) return;
+  isProcessing = true;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/registrations?guest_category=eq.CU%20Alumni%20Day%202026&email_sent=eq.false&select=*`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (!res.ok) return;
+    const rows = await res.json();
+    if (!Array.isArray(rows) || rows.length === 0) return;
+
+    for (const r of rows) {
+      console.log(`[Fail-Safe Daemon] Found unsent registration: ${r.reference_no} (${r.full_name})`);
+      let parsedNotes = {};
+      try { parsedNotes = JSON.parse(r.notes || '{}'); } catch (e) {}
+
+      const parts = (r.additional_requirements || '').split('|').map(s => s.trim());
+      const booking = {
+        referenceNo: r.reference_no,
+        fullName: r.full_name,
+        mobileNumber: r.mobile_number,
+        department: parsedNotes.department || '',
+        batch: parsedNotes.batch || '',
+        shortAddress: r.organization || '',
+        visitDate: parsedNotes.visitDate || parts[0] || '2026-11-22',
+        visitTimeSlot: parsedNotes.visitTimeSlot || parts[1] || '09:30 AM – 11:30 AM',
+        createdAt: r.created_at
+      };
+
+      await sendBookingNotificationEmail(booking);
+
+      // Mark email_sent = true in Supabase immediately
+      await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${r.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email_sent: true, email_error: null })
+      });
+      console.log(`[Fail-Safe Daemon] Marked ${r.reference_no} email_sent = true in Supabase.`);
+    }
+  } catch (err) {
+    console.warn('[Fail-Safe Daemon] Poll error:', err.message);
+  } finally {
+    isProcessing = false;
+  }
+}
+
+// Start continuous fail-safe polling every 3 seconds
+setInterval(processUnsentSupabaseEmails, 3000);
+setTimeout(processUnsentSupabaseEmails, 1000);
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
