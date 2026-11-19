@@ -345,7 +345,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true,
-        message: 'Head office visit booking confirmed! Show this pass to claim your gift.',
+        message: 'DEPLOY_VERIFY_9999',
         booking,
         emailStatus
       });
