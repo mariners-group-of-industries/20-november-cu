@@ -198,15 +198,17 @@ async function markSupabaseEmailSent(refNo) {
 
 async function saveToSupabase(booking) {
   try {
+    const rawDesig = booking.occupation
+      ? `${booking.occupation} • CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`
+      : `CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`;
+
     const row = {
-      reference_no: booking.referenceNo,
-      full_name: booking.fullName,
-      mobile_number: booking.mobileNumber,
+      reference_no: (booking.referenceNo || '').slice(0, 20),
+      full_name: (booking.fullName || '').slice(0, 140),
+      mobile_number: (booking.mobileNumber || '').slice(0, 25),
       guest_category: 'CU Alumni Day 2026',
-      organization: booking.shortAddress || 'Uttara, Dhaka',
-      designation: booking.occupation
-        ? `${booking.occupation} • CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`
-        : `CU Alumni (Batch ${booking.batch || 'N/A'}, Dept: ${booking.department || 'N/A'})`,
+      organization: (booking.shortAddress || 'Uttara, Dhaka').slice(0, 140),
+      designation: rawDesig.slice(0, 95),
       additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
       status: 'approved',
       email_sent: false,
@@ -237,7 +239,9 @@ async function saveToSupabase(booking) {
     if (res.ok) {
       console.log(`[Supabase] Saved booking ${booking.referenceNo}`);
     } else {
-      console.warn(`[Supabase] Save failed: ${res.status}`);
+      const errText = await res.text();
+      console.warn(`[Supabase] Save failed: ${res.status} - ${errText}`);
+    }
     }
   } catch (err) {
     console.warn('[Supabase] Save error:', err.message);

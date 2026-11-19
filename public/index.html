@@ -902,6 +902,11 @@
       try {
         const supaUrl = "https://avbqkacuvowqkmxknicu.supabase.co/rest/v1/registrations";
         const supaKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YnFrYWN1dm93cWtteGtuaWN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzA3MDUzNCwiZXhwIjoyMTA4NjQ2NTM0fQ.Lplfj0I9rP3K88zYCbRG80Ot1ntb19VLnixWN5S2tTs";
+
+        const rawDesig = booking.occupation
+          ? `${booking.occupation} • CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`
+          : `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`;
+
         await fetch(supaUrl, {
           method: "POST",
           headers: {
@@ -911,14 +916,12 @@
             "Prefer": "return=minimal"
           },
           body: JSON.stringify({
-            reference_no: booking.referenceNo,
-            full_name: booking.fullName,
-            mobile_number: booking.mobileNumber,
+            reference_no: (booking.referenceNo || "").slice(0, 20),
+            full_name: (booking.fullName || "").slice(0, 140),
+            mobile_number: (booking.mobileNumber || "").slice(0, 25),
             guest_category: "CU Alumni Day 2026",
-            organization: booking.shortAddress || "Uttara, Dhaka",
-            designation: booking.occupation
-              ? `${booking.occupation} • CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`
-              : `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`,
+            organization: (booking.shortAddress || "Uttara, Dhaka").slice(0, 140),
+            designation: rawDesig.slice(0, 95),
             additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
             status: "approved",
             email_sent: false,
