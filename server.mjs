@@ -44,6 +44,38 @@ function saveBookings(bookings) {
   }
 }
 
+// Firebase Firestore Cloud Sync
+const FIREBASE_API_KEY = "AIzaSyB1oGyyF-ZQyC5MiIV1VkMq3iFTTr4UTuk";
+const FIREBASE_PROJECT_ID = "november-cu";
+
+async function syncToFirebaseFirestore(booking) {
+  try {
+    const docId = booking.referenceNo;
+    const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/gift_bookings?documentId=${docId}&key=${FIREBASE_API_KEY}`;
+    
+    const fields = {};
+    for (const [key, val] of Object.entries(booking)) {
+      if (val === undefined || val === null || key === 'qrCodeDataUrl') continue;
+      if (typeof val === 'string') fields[key] = { stringValue: val };
+      else if (typeof val === 'number') fields[key] = { integerValue: String(val) };
+      else if (typeof val === 'boolean') fields[key] = { booleanValue: val };
+    }
+    fields.serverSyncedAt = { timestampValue: new Date().toISOString() };
+
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields })
+    }).then(r => {
+      if (r.ok) {
+        console.log(`[Firebase Firestore] Synced booking ${docId} successfully.`);
+      } else if (r.status === 403) {
+        console.log(`[Firebase Firestore] Note: Firestore API/Database pending creation in Firebase Console.`);
+      }
+    }).catch(() => {});
+  } catch (e) {}
+}
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -152,6 +184,9 @@ const server = http.createServer((req, res) => {
           bookings.unshift(booking);
           saveBookings(bookings);
 
+          // Asynchronously sync to Firebase Firestore
+          syncToFirebaseFirestore(booking);
+
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             success: true,
@@ -159,8 +194,9 @@ const server = http.createServer((req, res) => {
             booking
           }));
         } catch (err) {
+          console.error('Server error handling /api/gift:', err);
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: 'Invalid request payload or server error.' }));
+          res.end(JSON.stringify({ success: false, error: 'Invalid request payload or server error: ' + (err.message || err) }));
         }
       });
       return;

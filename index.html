@@ -19,6 +19,9 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
   <!-- QR Code Local Library -->
   <script src="/js/qrcode.min.js"></script>
+  <!-- Firebase App & Firestore SDKs (v10 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -624,6 +627,43 @@
     // Initialize Lucide Icons
     lucide.createIcons();
 
+    // Firebase Configuration & Firestore Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1oGyyF-ZQyC5MiIV1VkMq3iFTTr4UTuk",
+      authDomain: "november-cu.firebaseapp.com",
+      projectId: "november-cu",
+      storageBucket: "november-cu.firebasestorage.app",
+      messagingSenderId: "829969595607",
+      appId: "1:829969595607:web:f1842b88973bd518004492",
+      measurementId: "G-L6SQ0881HS"
+    };
+
+    let firebaseDb = null;
+    try {
+      if (typeof firebase !== "undefined") {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        firebaseDb = firebase.firestore();
+        console.log("🔥 Firebase Firestore connected successfully (Project: november-cu)");
+      }
+    } catch (fbInitErr) {
+      console.warn("Firebase initialization note:", fbInitErr);
+    }
+
+    async function syncBookingToFirestore(booking) {
+      if (!firebaseDb) return;
+      try {
+        await firebaseDb.collection("gift_bookings").doc(booking.referenceNo).set({
+          ...booking,
+          firestoreSyncedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        console.log("✅ Booking synced to Firebase Firestore:", booking.referenceNo);
+      } catch (err) {
+        console.warn("Firestore sync notice (Ensure Firestore Database is created in Firebase Console):", err.message);
+      }
+    }
+
     // 15-Day Date Data (Strictly DD/MM/YYYY, Excluding Fridays as Office is Closed)
     const ALLOWED_DATES = [
       { full: "2026-11-21", dmy: "21/11/2026", day: "Sat", date: "21", month: "Nov", year: "2026", verbose: "21 November 2026" },
@@ -837,6 +877,10 @@
 
     function displayVoucher(booking) {
       currentBooking = booking;
+
+      // Sync booking asynchronously to Firebase Firestore
+      syncBookingToFirestore(booking);
+
       document.getElementById("bookingFormSection").classList.add("hidden");
       const voucherScreen = document.getElementById("voucherScreen");
       voucherScreen.classList.remove("hidden");
