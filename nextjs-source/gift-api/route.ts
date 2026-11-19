@@ -33,12 +33,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Strict 15-Day Date Range Check
+    // Strict 15-Day Date Range Check (Excluding Fridays)
     if (visitDate < MIN_DATE || visitDate > MAX_DATE) {
       return NextResponse.json(
         {
           success: false,
           error: "Visit date must be strictly within the 15-day window (21 November to 05 December 2026).",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (visitDate === "2026-11-27" || visitDate === "2026-12-04") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Head Office is closed on Fridays. Please select a visit date between Saturday and Thursday.",
         },
         { status: 400 }
       );

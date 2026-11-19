@@ -30,7 +30,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-// Strict 15-Day Date Range (21 Nov – 05 Dec 2026) formatted as DD/MM/YYYY
+// 15-Day Date Range (Strictly DD/MM/YYYY, Excluding Fridays as Office is Closed)
 const ALLOWED_DATES = [
   { full: "2026-11-21", dmy: "21/11/2026", day: "Sat", date: "21", month: "Nov", year: "2026", verbose: "21 November 2026", label: "21/11/2026 (Sat - Event Day)" },
   { full: "2026-11-22", dmy: "22/11/2026", day: "Sun", date: "22", month: "Nov", year: "2026", verbose: "22 November 2026", label: "22/11/2026 (Sun)" },
@@ -38,14 +38,14 @@ const ALLOWED_DATES = [
   { full: "2026-11-24", dmy: "24/11/2026", day: "Tue", date: "24", month: "Nov", year: "2026", verbose: "24 November 2026", label: "24/11/2026 (Tue)" },
   { full: "2026-11-25", dmy: "25/11/2026", day: "Wed", date: "25", month: "Nov", year: "2026", verbose: "25 November 2026", label: "25/11/2026 (Wed)" },
   { full: "2026-11-26", dmy: "26/11/2026", day: "Thu", date: "26", month: "Nov", year: "2026", verbose: "26 November 2026", label: "26/11/2026 (Thu)" },
-  { full: "2026-11-27", dmy: "27/11/2026", day: "Fri", date: "27", month: "Nov", year: "2026", verbose: "27 November 2026", label: "27/11/2026 (Fri)" },
+  // Friday 27 Nov excluded (Office Closed)
   { full: "2026-11-28", dmy: "28/11/2026", day: "Sat", date: "28", month: "Nov", year: "2026", verbose: "28 November 2026", label: "28/11/2026 (Sat)" },
   { full: "2026-11-29", dmy: "29/11/2026", day: "Sun", date: "29", month: "Nov", year: "2026", verbose: "29 November 2026", label: "29/11/2026 (Sun)" },
   { full: "2026-11-30", dmy: "30/11/2026", day: "Mon", date: "30", month: "Nov", year: "2026", verbose: "30 November 2026", label: "30/11/2026 (Mon)" },
   { full: "2026-12-01", dmy: "01/12/2026", day: "Tue", date: "01", month: "Dec", year: "2026", verbose: "01 December 2026", label: "01/12/2026 (Tue)" },
   { full: "2026-12-02", dmy: "02/12/2026", day: "Wed", date: "02", month: "Dec", year: "2026", verbose: "02 December 2026", label: "02/12/2026 (Wed)" },
   { full: "2026-12-03", dmy: "03/12/2026", day: "Thu", date: "03", month: "Dec", year: "2026", verbose: "03 December 2026", label: "03/12/2026 (Thu)" },
-  { full: "2026-12-04", dmy: "04/12/2026", day: "Fri", date: "04", month: "Dec", year: "2026", verbose: "04 December 2026", label: "04/12/2026 (Fri)" },
+  // Friday 04 Dec excluded (Office Closed)
   { full: "2026-12-05", dmy: "05/12/2026", day: "Sat", date: "05", month: "Dec", year: "2026", verbose: "05 December 2026", label: "05/12/2026 (Sat - Last Day)" },
 ];
 
@@ -77,11 +77,14 @@ function formatVerbalDMY(dateStr: string): string {
   return dateStr;
 }
 
+// 2-Hour Time Slots between 9:30 AM and 6:00 PM
 const PRESET_TIME_SLOTS = [
-  "Morning (10:00 AM – 1:00 PM)",
-  "Afternoon (2:00 PM – 5:00 PM)",
-  "Evening (5:00 PM – 8:00 PM)",
-  "Custom Time (Flexible)",
+  "09:30 AM – 11:30 AM",
+  "11:30 AM – 01:30 PM",
+  "01:30 PM – 03:30 PM",
+  "02:00 PM – 04:00 PM",
+  "04:00 PM – 06:00 PM",
+  "Custom Time (Flexible: 9:30 AM – 6:00 PM)",
 ];
 
 export default function CUGiftPage() {
@@ -92,7 +95,7 @@ export default function CUGiftPage() {
   const [batch, setBatch] = useState("");
   const [shortAddress, setShortAddress] = useState("");
   const [visitDate, setVisitDate] = useState("2026-11-22");
-  const [timeSlot, setTimeSlot] = useState("Morning (10:00 AM – 1:00 PM)");
+  const [timeSlot, setTimeSlot] = useState("09:30 AM – 11:30 AM");
   const [customTime, setCustomTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -174,19 +177,15 @@ export default function CUGiftPage() {
       return;
     }
 
-    if (!visitDate) {
-      setErrorMsg("Please select your preferred visit date.");
-      return;
-    }
-
-    if (visitDate < "2026-11-21" || visitDate > "2026-12-05") {
-      setErrorMsg("Visit date must be strictly within the 15-day window (21/11/2026 – 05/12/2026).");
+    const isAllowedDate = ALLOWED_DATES.some((d) => d.full === visitDate);
+    if (!visitDate || !isAllowedDate) {
+      setErrorMsg("Visit date must be between 21/11/2026 and 05/12/2026 (excluding Fridays — Head Office is closed on Fridays).");
       return;
     }
 
     const effectiveTime =
-      timeSlot === "Custom Time (Flexible)"
-        ? customTime.trim() || "Flexible (Custom Time)"
+      timeSlot.startsWith("Custom Time")
+        ? customTime.trim() || "Flexible (Between 9:30 AM – 6:00 PM)"
         : timeSlot;
 
     setIsSubmitting(true);
@@ -202,7 +201,7 @@ export default function CUGiftPage() {
           shortAddress: shortAddress.trim() || undefined,
           visitDate,
           visitTimeSlot: effectiveTime,
-          customTime: timeSlot === "Custom Time (Flexible)" ? customTime.trim() : undefined,
+          customTime: timeSlot.startsWith("Custom Time") ? customTime.trim() : undefined,
         }),
       });
 
@@ -912,12 +911,12 @@ export default function CUGiftPage() {
                       Head Office Visit Date (Day / Month / Year) <span className="text-red-500">*</span>
                     </label>
                     <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
-                      21/11/2026 to 05/12/2026
+                      21/11/2026 to 05/12/2026 (Excl. Fridays)
                     </span>
                   </div>
 
-                  {/* 15 Quick Date Selector Pills (Showing Day, Month, Year clearly) */}
-                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-3">
+                  {/* Quick Date Selector Pills (Excluding Fridays, Showing Day, Month, Year clearly) */}
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 mb-3">
                     {ALLOWED_DATES.map((d) => {
                       const isSelected = visitDate === d.full;
                       return (
@@ -962,8 +961,8 @@ export default function CUGiftPage() {
 
                     {/* Format confirmation */}
                     <div className="flex flex-wrap items-center justify-between gap-1.5 px-1 text-[11px] text-slate-500">
-                      <span className="font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
-                        Format: DD/MM/YYYY (Day / Month / Year)
+                      <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        Format: DD/MM/YYYY • Office Closed on Fridays
                       </span>
                       <span className="font-medium text-slate-600">
                         Selected: <strong className="text-slate-900 font-mono">{formatDMY(visitDate)}</strong> ({formatVerbalDMY(visitDate)})
@@ -978,8 +977,8 @@ export default function CUGiftPage() {
                     <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
                       Preferred Time Slot <span className="text-red-500">*</span>
                     </label>
-                    <span className="text-[11px] font-semibold text-slate-500">
-                      Flexible schedule
+                    <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
+                      Office Hours: 9:30 AM – 6:00 PM (2-Hour Slots)
                     </span>
                   </div>
 
@@ -1011,7 +1010,7 @@ export default function CUGiftPage() {
                   </div>
 
                   {/* Custom Time Field if Selected */}
-                  {timeSlot === "Custom Time (Flexible)" && (
+                  {timeSlot.startsWith("Custom Time") && (
                     <div className="animate-in fade-in slide-in-from-top-2 duration-200">
                       <label className="block text-xs font-semibold text-slate-700 mb-1">
                         Specify Your Preferred Time:
@@ -1022,7 +1021,7 @@ export default function CUGiftPage() {
                           type="text"
                           value={customTime}
                           onChange={(e) => setCustomTime(e.target.value)}
-                          placeholder="e.g. 11:30 AM, 4:15 PM, or anytime during office hours"
+                          placeholder="e.g. 10:15 AM, 2:30 PM, or anytime between 9:30 AM – 6:00 PM"
                           className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
                         />
                       </div>

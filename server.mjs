@@ -7,6 +7,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3001;
 
+const DATA_DIR = path.join(__dirname, 'data');
+const DB_FILE = path.join(DATA_DIR, 'gift_bookings.json');
+
+// Ensure data folder and file exist
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+if (!fs.existsSync(DB_FILE)) {
+  fs.writeFileSync(DB_FILE, JSON.stringify([], null, 2), 'utf8');
+}
+
+function getBookings() {
+  try {
+    const raw = fs.readFileSync(DB_FILE, 'utf8');
+    return JSON.parse(raw);
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveBookings(bookings) {
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(bookings, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed to save bookings:', e);
+  }
+}
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -23,17 +51,99 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  // Normalize URL
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   let pathname = reqUrl.pathname;
 
+  // Handle API route: /api/gift
+  if (pathname === '/api/gift') {
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const data = JSON.parse(body || '{}');
+          const { fullName, mobileNumber, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
+
+          if (!fullName || fullName.trim().length < 2) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Please enter your full legal name.' }));
+            return;
+          }
+
+          const cleanMobile = (mobileNumber || '').replace(/[\s-]/g, '');
+          if (!cleanMobile || cleanMobile.length < 11) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Please enter a valid 11-digit mobile number.' }));
+            return;
+          }
+
+          if (!visitDate) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Please select your preferred visit date.' }));
+            return;
+          }
+
+          if (visitDate < '2026-11-21' || visitDate > '2026-12-05') {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Visit date must be strictly between 21/11/2026 and 05/12/2026.' }));
+            return;
+          }
+
+          if (visitDate === '2026-11-27' || visitDate === '2026-12-04') {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Head office is closed on Fridays. Please choose a visit date from Saturday to Thursday.' }));
+            return;
+          }
+
+          const timeSlot = (customTime && customTime.trim()) || (visitTimeSlot && visitTimeSlot.trim()) || '09:30 AM – 11:30 AM';
+          const refNo = `GIFT-${Math.floor(1000 + Math.random() * 9000)}`;
+
+          const booking = {
+            id: 'bk_' + Date.now(),
+            referenceNo: refNo,
+            fullName: fullName.trim(),
+            mobileNumber: cleanMobile,
+            department: department ? department.trim() : undefined,
+            batch: batch ? batch.trim() : undefined,
+            shortAddress: shortAddress ? shortAddress.trim() : undefined,
+            visitDate,
+            visitTimeSlot: timeSlot,
+            customTime: customTime ? customTime.trim() : undefined,
+            status: 'confirmed',
+            createdAt: new Date().toISOString()
+          };
+
+          const bookings = getBookings();
+          bookings.unshift(booking);
+          saveBookings(bookings);
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: 'Head office visit booking confirmed! Show this pass to claim your gift.',
+            booking
+          }));
+        } catch (err) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Invalid request payload or server error.' }));
+        }
+      });
+      return;
+    } else if (req.method === 'GET') {
+      const bookings = getBookings();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, count: bookings.length, bookings }));
+      return;
+    }
+  }
+
+  // Static File Serving
   if (pathname === '/' || pathname === '') {
     pathname = '/index.html';
   }
 
   const filePath = path.join(__dirname, pathname);
 
-  // Security check: ensure path is within __dirname
   if (!filePath.startsWith(__dirname)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     res.end('403 Forbidden');
@@ -42,7 +152,6 @@ const server = http.createServer((req, res) => {
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      // Fallback to index.html for SPA routing
       const indexPath = path.join(__dirname, 'index.html');
       fs.readFile(indexPath, (err2, data) => {
         if (err2) {
