@@ -966,9 +966,24 @@
         });
       } catch (e) {}
 
-      // WhatsApp Share Link
-      const waText = encodeURIComponent(`I booked my visit to Biniyog Club / Mariners Group Head Office! Pass ID: ${booking.referenceNo}. Visit Date: ${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})`);
-      document.getElementById("shareWaBtn").href = `https://wa.me/?text=${waText}`;
+      // WhatsApp Share Link directly to +880 1335-149006
+      const waMsg = `Hello Biniyog Club & Mariners Group Helpdesk,
+
+I have registered for the CU Alumni Day 2026 Executive Gift Pass!
+
+📋 Pass Reference: ${booking.referenceNo}
+👤 Name: ${booking.fullName}
+📞 Mobile: ${booking.mobileNumber}
+🏛️ Dept/Batch: ${booking.department || 'N/A'}${booking.batch ? ' (Batch ' + booking.batch + ')' : ''}
+📅 Confirmed Visit Date: ${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})
+⏰ Preferred Time Slot: ${booking.visitTimeSlot}
+🎁 Gift Collection Point: Friends Club Field, Sector 3, Uttara, Dhaka
+🏢 Head Office Destination: 10th Floor, MG SAM Center, Mohakhali, Dhaka
+
+Please confirm my pass reservation. Thank you!`;
+
+      const waText = encodeURIComponent(waMsg);
+      document.getElementById("shareWaBtn").href = `https://wa.me/8801335149006?text=${waText}`;
 
       window.scrollTo({ top: 0, behavior: "smooth" });
       lucide.createIcons();
