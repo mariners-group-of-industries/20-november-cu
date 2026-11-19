@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createGiftBooking, getGiftBookings, updateGiftStatus } from "@/lib/store";
 import { isValidBDPhone } from "@/lib/utils";
 
-// 15-Day Allowed Range: 21 November 2026 to 05 December 2026
+// Allowed Range: 21 November 2026 to 06 December 2026 (Excluding Fridays)
 const MIN_DATE = "2026-11-21";
-const MAX_DATE = "2026-12-05";
+const MAX_DATE = "2026-12-06";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Visit date must be strictly within the 15-day window (21 November to 05 December 2026).",
+          error: "Visit date must be strictly between 21 November and 06 December 2026.",
         },
         { status: 400 }
       );

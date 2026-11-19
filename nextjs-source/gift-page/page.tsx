@@ -46,7 +46,8 @@ const ALLOWED_DATES = [
   { full: "2026-12-02", dmy: "02/12/2026", day: "Wed", date: "02", month: "Dec", year: "2026", verbose: "02 December 2026", label: "02/12/2026 (Wed)" },
   { full: "2026-12-03", dmy: "03/12/2026", day: "Thu", date: "03", month: "Dec", year: "2026", verbose: "03 December 2026", label: "03/12/2026 (Thu)" },
   // Friday 04 Dec excluded (Office Closed)
-  { full: "2026-12-05", dmy: "05/12/2026", day: "Sat", date: "05", month: "Dec", year: "2026", verbose: "05 December 2026", label: "05/12/2026 (Sat - Last Day)" },
+  { full: "2026-12-05", dmy: "05/12/2026", day: "Sat", date: "05", month: "Dec", year: "2026", verbose: "05 December 2026", label: "05/12/2026 (Sat)" },
+  { full: "2026-12-06", dmy: "06/12/2026", day: "Sun", date: "06", month: "Dec", year: "2026", verbose: "06 December 2026", label: "06/12/2026 (Sun - Last Day)" },
 ];
 
 // Helper: Format YYYY-MM-DD to DD/MM/YYYY (Day / Month / Year)
@@ -179,7 +180,7 @@ export default function CUGiftPage() {
 
     const isAllowedDate = ALLOWED_DATES.some((d) => d.full === visitDate);
     if (!visitDate || !isAllowedDate) {
-      setErrorMsg("Visit date must be between 21/11/2026 and 05/12/2026 (excluding Fridays — Head Office is closed on Fridays).");
+      setErrorMsg("Visit date must be between 21/11/2026 and 06/12/2026 (excluding Fridays — Head Office is closed on Fridays).");
       return;
     }
 
@@ -418,7 +419,7 @@ export default function CUGiftPage() {
       ctx.textAlign = "center";
       ctx.fillStyle = "#ef4444";
       ctx.font = "bold 14px sans-serif";
-      ctx.fillText("VALID FOR 15 DAYS ONLY: 21/11/2026 – 05/12/2026 (21 NOV – 05 DEC 2026)", 500, 1165);
+      ctx.fillText("VALID FOR 15 DAYS ONLY: 21/11/2026 – 06/12/2026 (21 NOV – 06 DEC 2026)", 500, 1165);
 
       ctx.fillStyle = "#64748b";
       ctx.font = "13px sans-serif";
@@ -531,7 +532,7 @@ export default function CUGiftPage() {
             </a>
             <span className="text-slate-300">•</span>
             <Calendar className="w-3.5 h-3.5 text-sky-600" />
-            <span className="font-semibold text-slate-900 font-mono">21/11/2026 – 05/12/2026</span>
+            <span className="font-semibold text-slate-900 font-mono">21/11/2026 – 06/12/2026</span>
             <span className="text-slate-300">•</span>
             <span className="text-emerald-700 font-bold">15-Day Date Lock</span>
           </div>
@@ -687,7 +688,7 @@ export default function CUGiftPage() {
 
                   <div className="pt-2 text-[11px] text-slate-500 space-y-1 border-t border-slate-100">
                     <div>
-                      • <strong>Strict Validity:</strong> Next 15 days (Valid until 05/12/2026).
+                      • <strong>Strict Validity:</strong> Next 15 days (Valid until 06/12/2026).
                     </div>
                     <div>
                       • Simply show this digital pass on your smartphone at the event gift desk.
@@ -910,7 +911,7 @@ export default function CUGiftPage() {
                       Head Office Visit Date (Day / Month / Year) <span className="text-red-500">*</span>
                     </label>
                     <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
-                      21/11/2026 to 05/12/2026 (Excl. Fridays)
+                      21/11/2026 to 06/12/2026 (Excl. Fridays)
                     </span>
                   </div>
 

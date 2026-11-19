@@ -83,9 +83,9 @@ const server = http.createServer((req, res) => {
             return;
           }
 
-          if (visitDate < '2026-11-21' || visitDate > '2026-12-05') {
+          if (visitDate < '2026-11-21' || visitDate > '2026-12-06') {
             res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'Visit date must be strictly between 21/11/2026 and 05/12/2026.' }));
+            res.end(JSON.stringify({ success: false, error: 'Visit date must be strictly between 21/11/2026 and 06/12/2026.' }));
             return;
           }
 

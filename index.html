@@ -83,7 +83,7 @@
         </a>
         <span class="text-slate-300">•</span>
         <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-600"></i>
-        <span class="font-semibold text-slate-900 font-mono">21/11/2026 – 05/12/2026</span>
+        <span class="font-semibold text-slate-900 font-mono">21/11/2026 – 06/12/2026</span>
         <span class="text-slate-300">•</span>
         <span class="text-emerald-700 font-bold">15-Day Date Lock</span>
       </div>
@@ -377,7 +377,7 @@
                 Head Office Visit Date (Day / Month / Year) <span class="text-red-500">*</span>
               </label>
               <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
-                21/11/2026 to 05/12/2026 (Excl. Fridays)
+                21/11/2026 to 06/12/2026 (Excl. Fridays)
               </span>
             </div>
 
@@ -649,6 +649,7 @@
       { full: "2026-12-03", dmy: "03/12/2026", day: "Thu", date: "03", month: "Dec", year: "2026", verbose: "03 December 2026" },
       // Friday 04 Dec excluded (Office Closed)
       { full: "2026-12-05", dmy: "05/12/2026", day: "Sat", date: "05", month: "Dec", year: "2026", verbose: "05 December 2026" },
+      { full: "2026-12-06", dmy: "06/12/2026", day: "Sun", date: "06", month: "Dec", year: "2026", verbose: "06 December 2026" },
     ];
 
     function formatDMY(dateStr) {
@@ -781,7 +782,7 @@
 
       const isAllowedDate = ALLOWED_DATES.some((d) => d.full === selectedDate);
       if (!selectedDate || !isAllowedDate) {
-        showError("Visit date must be between 21/11/2026 and 05/12/2026 (excluding Fridays — Head Office is closed on Fridays).");
+        showError("Visit date must be between 21/11/2026 and 06/12/2026 (excluding Fridays — Head Office is closed on Fridays).");
         return;
       }
 
@@ -1053,7 +1054,7 @@
         ctx.textAlign = "center";
         ctx.fillStyle = "#ef4444";
         ctx.font = "bold 14px sans-serif";
-        ctx.fillText("VALID FOR 15 DAYS ONLY: 21/11/2026 – 05/12/2026 (21 NOV – 05 DEC 2026)", 500, 1165);
+        ctx.fillText("VALID FOR 15 DAYS ONLY: 21/11/2026 – 06/12/2026 (21 NOV – 06 DEC 2026)", 500, 1165);
 
         ctx.fillStyle = "#64748b";
         ctx.font = "13px sans-serif";
