@@ -299,7 +299,7 @@ export default async function handler(req, res) {
       const { fullName, mobileNumber, occupation, department, batch, shortAddress, visitDate, visitTimeSlot, customTime } = data;
 
       if (!fullName || fullName.trim().length < 2) {
-        return res.status(400).json({ success: false, error: 'Please enter your full legal name.' });
+        return res.status(400).json({ success: false, error: 'Please enter your full name.' });
       }
 
       const cleanMobile = (mobileNumber || '').replace(/[\s-]/g, '');

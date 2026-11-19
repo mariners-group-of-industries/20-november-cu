@@ -355,7 +355,7 @@ const server = http.createServer((req, res) => {
 
           if (!fullName || fullName.trim().length < 2) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'Please enter your full legal name.' }));
+            res.end(JSON.stringify({ success: false, error: 'Please enter your full name.' }));
             return;
           }
 

@@ -298,10 +298,10 @@
         </div>
 
         <form id="giftForm" class="space-y-5">
-          <!-- 1. Full Legal Name -->
+          <!-- 1. Full Name -->
           <div>
             <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
-              Full Legal Name <span class="text-red-500">*</span>
+              Full Name <span class="text-red-500">*</span>
             </label>
             <div class="relative">
               <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
@@ -824,7 +824,7 @@
       const shortAddress = document.getElementById("addressInput").value.trim();
 
       if (!fullName || fullName.length < 2) {
-        showError("Please enter your full legal name.");
+        showError("Please enter your full name.");
         return;
       }
 
