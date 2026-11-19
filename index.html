@@ -910,8 +910,10 @@
       const qrContainer = document.getElementById("qrCodeContainer");
 
       if (booking.qrCodeDataUrl) {
+        qrImg.style.display = "block";
         qrImg.src = booking.qrCodeDataUrl;
       } else if (typeof QRCode !== "undefined") {
+        qrImg.style.display = "none";
         qrContainer.innerHTML = "";
         new QRCode(qrContainer, {
           text: qrPayload,
