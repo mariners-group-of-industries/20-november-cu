@@ -875,11 +875,42 @@
       errorAlert.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
+    async function syncBookingToSupabase(booking) {
+      try {
+        const supaUrl = "https://avbqkacuvowqkmxknicu.supabase.co/rest/v1/registrations";
+        const supaKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YnFrYWN1dm93cWtteGtuaWN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzA3MDUzNCwiZXhwIjoyMTA4NjQ2NTM0fQ.Lplfj0I9rP3K88zYCbRG80Ot1ntb19VLnixWN5S2tTs";
+        await fetch(supaUrl, {
+          method: "POST",
+          headers: {
+            "apikey": supaKey,
+            "Authorization": "Bearer " + supaKey,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify({
+            reference_no: booking.referenceNo,
+            full_name: booking.fullName,
+            mobile_number: booking.mobileNumber,
+            guest_category: "CU Alumni Day 2026",
+            organization: booking.shortAddress || "Uttara, Dhaka",
+            designation: `CU Alumni (${booking.batch ? 'Batch ' + booking.batch : 'Alumni'}, ${booking.department || ''})`,
+            additional_requirements: `${booking.visitDate} | ${booking.visitTimeSlot}`,
+            status: "approved",
+            notes: JSON.stringify(booking)
+          })
+        });
+        console.log("Synced booking directly to Supabase:", booking.referenceNo);
+      } catch (e) {
+        console.warn("Supabase direct sync notice:", e);
+      }
+    }
+
     function displayVoucher(booking) {
       currentBooking = booking;
 
-      // Sync booking asynchronously to Firebase Firestore
+      // Sync booking asynchronously to Firebase Firestore and Supabase Cloud
       syncBookingToFirestore(booking);
+      syncBookingToSupabase(booking);
 
       document.getElementById("bookingFormSection").classList.add("hidden");
       const voucherScreen = document.getElementById("voucherScreen");

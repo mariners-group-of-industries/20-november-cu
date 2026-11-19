@@ -500,7 +500,7 @@
       let records = [];
       const map = new Map();
 
-      // 1. Try local server API
+      // 1. Try server API (/api/gift)
       try {
         const res = await fetch("/api/gift");
         if (res.ok) {
@@ -512,7 +512,40 @@
           }
         }
       } catch (err) {
-        console.warn("Local API fetch error:", err);
+        console.warn("API fetch error:", err);
+      }
+
+      // 2. Try Supabase Cloud DB (Always online & real-time)
+      try {
+        const supaUrl = "https://avbqkacuvowqkmxknicu.supabase.co/rest/v1/registrations?guest_category=eq.CU%20Alumni%20Day%202026&order=created_at.desc";
+        const supaKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2YnFrYWN1dm93cWtteGtuaWN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzA3MDUzNCwiZXhwIjoyMTA4NjQ2NTM0fQ.Lplfj0I9rP3K88zYCbRG80Ot1ntb19VLnixWN5S2tTs";
+        const sRes = await fetch(supaUrl, {
+          headers: { apikey: supaKey, Authorization: "Bearer " + supaKey }
+        });
+        if (sRes.ok) {
+          const rows = await sRes.json();
+          rows.forEach(r => {
+            let notes = {};
+            try { notes = JSON.parse(r.notes || '{}'); } catch(e) {}
+            const b = {
+              id: r.id,
+              referenceNo: r.reference_no,
+              fullName: r.full_name,
+              mobileNumber: r.mobile_number,
+              department: notes.department || '',
+              batch: notes.batch || '',
+              shortAddress: notes.shortAddress || r.organization || '',
+              visitDate: notes.visitDate || '',
+              visitTimeSlot: notes.visitTimeSlot || '',
+              status: 'confirmed',
+              createdAt: notes.createdAt || r.created_at,
+              qrCodeDataUrl: notes.qrCodeDataUrl || ''
+            };
+            if (b.referenceNo) map.set(b.referenceNo, { ...(map.get(b.referenceNo) || {}), ...b });
+          });
+        }
+      } catch (supaErr) {
+        console.warn("Supabase fetch error:", supaErr);
       }
 
       // 2. Try Firestore collection
