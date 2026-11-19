@@ -133,7 +133,8 @@ export default function CUGiftPage() {
       verbalDate: formatVerbalDMY(confirmedBooking.visitDate),
       time: confirmedBooking.visitTimeSlot,
       event: "CU Day 2026 Gift",
-      location: "10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212",
+      giftPickup: "Event Venue (Friends Club Field, Sector 3, Uttara, Dhaka)",
+      committedVisit: "10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212",
       map: "https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9",
     });
 
@@ -370,7 +371,7 @@ export default function CUGiftPage() {
       ctx.font = "bold 18px sans-serif";
       ctx.fillText(confirmedBooking.visitTimeSlot, 650, 588);
 
-      // Head Office Location Box
+      // Venue & Location Box
       ctx.fillStyle = "#ffffff";
       ctx.strokeStyle = "#e2e8f0";
       if (typeof ctx.roundRect === "function") {
@@ -382,17 +383,17 @@ export default function CUGiftPage() {
         ctx.fillRect(80, 660, 840, 160);
       }
 
-      ctx.fillStyle = "#0369a1";
+      ctx.fillStyle = "#059669";
       ctx.font = "bold 14px sans-serif";
-      ctx.fillText("HEAD OFFICE GIFT COLLECTION DESK", 110, 698);
+      ctx.fillText("GIFT COLLECTION POINT: AT THE EVENT (FRIENDS CLUB FIELD, UTTARA)", 110, 698);
 
       ctx.fillStyle = "#0f172a";
-      ctx.font = "bold 20px sans-serif";
-      ctx.fillText("10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212", 110, 735);
+      ctx.font = "bold 18px sans-serif";
+      ctx.fillText("Committed Visit Location: 10th Floor, MG SAM Center, Mohakhali, Dhaka", 110, 735);
 
       ctx.fillStyle = "#64748b";
       ctx.font = "14px sans-serif";
-      ctx.fillText("Mohakhali C/A (Near Wireless Gate) • Maps: maps.app.goo.gl/83ZSDuxA7xWiMV7b9", 110, 768);
+      ctx.fillText("12 Bir Uttam AK Khandakar Rd, Dhaka 1212 • Maps: maps.app.goo.gl/83ZSDuxA7xWiMV7b9", 110, 768);
 
       ctx.fillStyle = "#0284c7";
       ctx.font = "bold 13px sans-serif";
@@ -423,7 +424,7 @@ export default function CUGiftPage() {
       ctx.fillStyle = "#64748b";
       ctx.font = "13px sans-serif";
       ctx.fillText(
-        "Please display this pass on your phone upon visiting our Head Office to claim your exclusive gift.",
+        "Present this pass at the Biniyog Club & Mariners Group desk right here at the event to collect your gift instantly!",
         500,
         1195
       );
@@ -567,8 +568,7 @@ export default function CUGiftPage() {
                 Your Digital VIP Gift Pass
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
-                Please present this digital pass or quote your reference ID when you arrive at our
-                Mohakhali Head Office to claim your exclusive gift.
+                Present this pass at the Biniyog Club &amp; Mariners Group desk right here at the event to collect your gift instantly!
               </p>
             </div>
 
@@ -636,36 +636,51 @@ export default function CUGiftPage() {
                 </div>
               </div>
 
-              {/* Venue Address & Live QR Code */}
+              {/* Venue Details & QR Code */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-                <div className="sm:col-span-2 space-y-2 text-xs text-slate-600">
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center shrink-0 mt-0.5">
-                      <MapPin className="w-4 h-4 text-red-500" />
+                <div className="sm:col-span-2 space-y-3 text-xs text-slate-600">
+                  {/* 1. Gift Collection: At the Event */}
+                  <div className="p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5 text-emerald-700">
+                      <Gift className="w-4 h-4" />
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded inline-block">
+                        Gift Collection Point (At The Event)
+                      </span>
                       <strong className="text-slate-900 block text-sm font-bold">
-                        Gift Collection Desk (Head Office):
+                        Friends Club Field, Sector 3, Uttara, Dhaka
                       </strong>
-                      <div className="text-slate-800 font-semibold text-sm">
+                      <p className="text-[11px] text-emerald-900 font-medium">
+                        Collect your gift directly at the event stall upon presenting this pass!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 2. Committed Head Office Visit */}
+                  <div className="p-3.5 rounded-2xl bg-sky-50/80 border border-sky-200/80 flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center shrink-0 mt-0.5 text-sky-700">
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-800 bg-sky-100/80 px-2 py-0.5 rounded inline-block">
+                        Committed Head Office Visit
+                      </span>
+                      <strong className="text-slate-900 block text-sm font-bold">
                         10th Floor, MG SAM Center
-                      </div>
-                      <div className="text-xs text-slate-600">
+                      </strong>
+                      <span className="text-slate-700 font-medium block">
                         12 Bir Uttam AK Khandakar Rd, Mohakhali C/A, Dhaka 1212
-                      </div>
-                      <div className="text-[11px] text-slate-500">
-                        (Near Mohakhali Wireless Gate)
-                      </div>
-                      <div className="pt-1.5 flex items-center gap-2">
+                      </span>
+                      <div className="pt-1">
                         <a
                           href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs border border-sky-200 shadow-2xs transition-all"
+                          className="inline-flex items-center gap-1 text-[11px] text-sky-700 hover:text-sky-800 font-bold hover:underline"
                         >
-                          <MapPin className="w-3.5 h-3.5 text-red-500" />
-                          <span>Open in Google Maps</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-sky-600" />
+                          <MapPin className="w-3 h-3 text-red-500" />
+                          <span>Google Maps Directions ↗</span>
                         </a>
                       </div>
                     </div>
@@ -676,7 +691,7 @@ export default function CUGiftPage() {
                       • <strong>Strict Validity:</strong> Next 15 days (Valid until 05/12/2026).
                     </div>
                     <div>
-                      • Simply show this digital pass on your smartphone at reception.
+                      • Simply show this digital pass on your smartphone at the event gift desk.
                     </div>
                   </div>
                 </div>
@@ -1033,26 +1048,42 @@ export default function CUGiftPage() {
           </div>
         )}
 
-        {/* 4. HEAD OFFICE LOCATION & DIRECTIONS CARD (Requested by user) */}
-        <section className="mt-8 max-w-2xl mx-auto">
+        {/* 4. Gift Collection & Head Office Location Card */}
+        <section className="mt-8 max-w-2xl mx-auto space-y-3">
           <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0 shadow-2xs">
-                <MapPin className="w-6 h-6 text-red-500" />
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 shadow-2xs">
+                <Gift className="w-6 h-6 text-emerald-600" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mb-1">
+                  Gift Collection Point (At The Event)
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+                  Friends Club Field, Sector 3, Uttara, Dhaka
+                </h3>
+                <p className="text-xs text-emerald-800 mt-0.5 font-medium">
+                  Chittagong University Day 2026 • Collect your exclusive corporate gift directly at the event stall!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center shrink-0 shadow-2xs">
+                <Building2 className="w-6 h-6 text-sky-600" />
               </div>
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 inline-block mb-1">
-                  Head Office Location &amp; Gift Collection Point
+                  Committed Head Office Visit Destination
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
                   10th Floor, MG SAM Center
                 </h3>
                 <p className="text-xs text-slate-600 mt-0.5 font-medium">
-                  12 Bir Uttam AK Khandakar Rd, Mohakhali C/A, Dhaka 1212
+                  12 Bir Uttam AK Khandakar Rd, Mohakhali C/A, Dhaka 1212 (Near Wireless Gate)
                 </p>
-                <div className="text-[11px] text-slate-400 mt-0.5">
-                  (Near Mohakhali Wireless Gate)
-                </div>
               </div>
             </div>
 
@@ -1263,11 +1294,14 @@ export default function CUGiftPage() {
       {/* 6. FOOTER */}
       <footer className="mt-16 bg-white border-t border-slate-200 py-8 px-4 text-center text-xs text-slate-500">
         <div className="max-w-4xl mx-auto space-y-2">
-          <p className="font-semibold text-slate-700">
+          <p className="font-bold text-slate-800">
             Chittagong University Day 2026 • CU Alumni Society Uttara, Dhaka
           </p>
+          <p className="text-emerald-700 font-semibold">
+            Gift Collection Point: At the Event Venue (Friends Club Field, Sector 3, Uttara, Dhaka)
+          </p>
           <p>
-            Gift Collection Point: 10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212 • Hotline: +880 1335-149006 •{" "}
+            Committed Head Office Visit: 10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212 • Hotline: +880 1335-149006 •{" "}
             <a
               href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9"
               target="_blank"
