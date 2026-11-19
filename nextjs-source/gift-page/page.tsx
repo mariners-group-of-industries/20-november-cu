@@ -938,36 +938,6 @@ export default function CUGiftPage() {
                       );
                     })}
                   </div>
-
-                  {/* Explicit DD/MM/YYYY Dropdown Selector */}
-                  <div className="space-y-2">
-                    <div className="relative">
-                      <Calendar className="w-4 h-4 text-sky-600 absolute left-3.5 top-3.5 pointer-events-none" />
-                      <select
-                        id="visitDateSelect"
-                        value={visitDate}
-                        onChange={(e) => setVisitDate(e.target.value)}
-                        className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 text-slate-900 text-sm font-bold border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all appearance-none cursor-pointer font-mono shadow-2xs"
-                      >
-                        {ALLOWED_DATES.map((d) => (
-                          <option key={d.full} value={d.full}>
-                            {d.dmy}  —  {d.day}, {d.verbose} {d.full === "2026-12-05" ? "(Last Day)" : ""}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5 pointer-events-none" />
-                    </div>
-
-                    {/* Format confirmation */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 px-1 text-[11px] text-slate-500">
-                      <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        Format: DD/MM/YYYY • Office Closed on Fridays
-                      </span>
-                      <span className="font-medium text-slate-600">
-                        Selected: <strong className="text-slate-900 font-mono">{formatDMY(visitDate)}</strong> ({formatVerbalDMY(visitDate)})
-                      </span>
-                    </div>
-                  </div>
                 </div>
 
                 {/* 6. Preferred Time Slot ("somoi icca moto select kora jabe") */}

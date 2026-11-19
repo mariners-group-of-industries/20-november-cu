@@ -377,32 +377,8 @@
             </div>
 
             <!-- Quick Date Selector Pills (Excluding Fridays, Showing Day, Month, Year clearly) -->
-            <div id="datePillsContainer" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 mb-3">
+            <div id="datePillsContainer" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
               <!-- Rendered via JS -->
-            </div>
-
-            <!-- Explicit DD/MM/YYYY Dropdown Selector -->
-            <div class="space-y-2">
-              <div class="relative">
-                <i data-lucide="calendar" class="w-4 h-4 text-sky-600 absolute left-3.5 top-3.5 pointer-events-none"></i>
-                <select
-                  id="visitDateSelect"
-                  class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 text-slate-900 text-sm font-bold border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all appearance-none cursor-pointer font-mono shadow-2xs"
-                >
-                  <!-- Populated via JS -->
-                </select>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5 pointer-events-none"></i>
-              </div>
-
-              <!-- Format confirmation -->
-              <div class="flex flex-wrap items-center justify-between gap-1.5 px-1 text-[11px] text-slate-500">
-                <span class="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                  Format: DD/MM/YYYY • Office Closed on Fridays
-                </span>
-                <span class="font-medium text-slate-600">
-                  Selected: <strong id="selectedDateDisplay" class="text-slate-900 font-mono">22/11/2026</strong> (<span id="verbalDateDisplay">22 November 2026</span>)
-                </span>
-              </div>
             </div>
           </div>
 
@@ -710,27 +686,8 @@
     let selectedTimeSlot = "09:30 AM – 11:30 AM";
     let currentBooking = null;
 
-    // Render Date Pills & Dropdown Selector
+    // Render Date Pills
     const datePillsContainer = document.getElementById("datePillsContainer");
-    const visitDateSelect = document.getElementById("visitDateSelect");
-    const selectedDateDisplay = document.getElementById("selectedDateDisplay");
-    const verbalDateDisplay = document.getElementById("verbalDateDisplay");
-
-    function populateDateDropdown() {
-      visitDateSelect.innerHTML = "";
-      ALLOWED_DATES.forEach((d) => {
-        const opt = document.createElement("option");
-        opt.value = d.full;
-        opt.textContent = `${d.dmy}  —  ${d.day}, ${d.verbose} ${d.full === "2026-12-05" ? "(Last Day)" : ""}`.trim();
-        visitDateSelect.appendChild(opt);
-      });
-      visitDateSelect.value = selectedDate;
-    }
-
-    function updateDateSelectionDisplay() {
-      selectedDateDisplay.textContent = formatDMY(selectedDate);
-      verbalDateDisplay.textContent = formatVerbalDMY(selectedDate);
-    }
 
     function renderDatePills() {
       datePillsContainer.innerHTML = "";
@@ -738,7 +695,7 @@
         const btn = document.createElement("button");
         btn.type = "button";
         const isSelected = selectedDate === d.full;
-        btn.className = `p-2 rounded-xl text-center border transition-all cursor-pointer flex flex-col items-center justify-center ${
+        btn.className = `p-2.5 rounded-xl text-center border transition-all cursor-pointer flex flex-col items-center justify-center ${
           isSelected
             ? "bg-sky-600 text-white border-sky-600 shadow-sm ring-1 ring-sky-600"
             : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"
@@ -750,23 +707,13 @@
         `;
         btn.addEventListener("click", () => {
           selectedDate = d.full;
-          visitDateSelect.value = d.full;
-          updateDateSelectionDisplay();
           renderDatePills();
         });
         datePillsContainer.appendChild(btn);
       });
     }
 
-    populateDateDropdown();
-    updateDateSelectionDisplay();
     renderDatePills();
-
-    visitDateSelect.addEventListener("change", (e) => {
-      selectedDate = e.target.value;
-      updateDateSelectionDisplay();
-      renderDatePills();
-    });
 
     // Render Time Slots
     const timeSlotsContainer = document.getElementById("timeSlotsContainer");
