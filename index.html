@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan, Commit & Claim Your Gift — CU Alumni Society Uttara & Biniyog Club</title>
+  <meta name="description" content="Chittagong University Day 2026 • Book your Head Office visit within 15 days and claim your executive corporate gift. Sponsored by Biniyog Club & Mariners Group.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+  <!-- QR Code CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 selection:bg-sky-600 selection:text-white">
+
+  <!-- 1. Top Announcement Bar (Matching Main Site Style) -->
+  <div class="bg-[#0c1e33] text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-semibold text-white tracking-wide">
+          OFFICIAL ALUMNI ANNOUNCEMENT
+        </span>
+        <span class="hidden sm:inline text-slate-400">•</span>
+        <span class="hidden sm:inline text-slate-300">
+          Chittagong University Day 2026 • CU Alumni Society Uttara, Dhaka
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs">
+        <a href="tel:+8801335149006" class="flex items-center gap-1.5 hover:text-white transition-colors">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>+880 1335-149006</span>
+        </a>
+        <a href="https://wa.me/8801335149006" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-white transition-colors">
+          <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>WhatsApp Help</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Sticky Navbar -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 sm:h-20 flex items-center justify-between gap-3">
+      <!-- Left Brand: Biniyog Club -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center p-2 shadow-2xs group-hover:scale-105 transition-transform">
+          <img src="/images/biniyog-club-logo.png" alt="Biniyog Club" class="w-full h-full object-contain" />
+        </div>
+        <div>
+          <div class="text-sm sm:text-base font-extrabold text-[#0a523d] group-hover:text-emerald-700 tracking-tight leading-tight">
+            BINIYOG CLUB
+          </div>
+          <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            Exclusive Gift Desk
+          </div>
+        </div>
+      </a>
+
+      <!-- Center Coordinates Pill (DD/MM/YYYY) -->
+      <div class="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+        <a href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-slate-800 hover:text-sky-700 font-semibold transition-colors">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500"></i>
+          <span>10th Floor, MG SAM Center, Mohakhali</span>
+          <i data-lucide="arrow-up-right" class="w-3 h-3 text-slate-400"></i>
+        </a>
+        <span class="text-slate-300">•</span>
+        <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-600"></i>
+        <span class="font-semibold text-slate-900 font-mono">21/11/2026 – 05/12/2026</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-emerald-700 font-bold">15-Day Date Lock</span>
+      </div>
+
+      <!-- Right Action: Corporate Brochure Button -->
+      <div class="flex items-center gap-2">
+        <a href="https://brochure.marinersgroupbd.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 sm:py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs sm:text-sm shadow-sm inline-flex items-center gap-1.5 transition-all cursor-pointer">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>Corporate Brochure</span>
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main Content: Hero & Centered Form -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+    <!-- SUCCESS SCREEN: DIGITAL GIFT VOUCHER (Initially Hidden) -->
+    <div id="voucherScreen" class="hidden max-w-2xl mx-auto space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-extrabold border border-emerald-300">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+          VISIT BOOKING CONFIRMED
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Your Digital VIP Gift Pass
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
+          Please present this digital pass or quote your reference ID when you arrive at our
+          Mohakhali Head Office to claim your exclusive gift.
+        </p>
+      </div>
+
+      <!-- Voucher Card -->
+      <div id="voucherCard" class="bg-white rounded-3xl border-2 border-sky-600/30 p-6 sm:p-8 shadow-xl relative overflow-hidden space-y-6">
+        <div class="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-sky-600 via-emerald-500 to-sky-700"></div>
+
+        <div class="flex items-start justify-between gap-4 pt-1">
+          <div>
+            <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-sky-800 bg-sky-50 px-2.5 py-1 rounded-md border border-sky-200">
+              CU Alumni Executive Gift Voucher
+            </span>
+            <h2 id="vName" class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">
+              Guest Name
+            </h2>
+            <p id="vSubInfo" class="text-xs text-slate-500 mt-0.5 font-medium">
+              Chittagong University Alumni Member
+            </p>
+          </div>
+
+          <div class="text-right shrink-0">
+            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+              Pass Ref ID
+            </span>
+            <span id="vRef" class="text-base sm:text-lg font-mono font-extrabold text-sky-700 bg-sky-50 px-3 py-1 rounded-lg border border-sky-200 inline-block mt-0.5">
+              #CU-GIFT-1001
+            </span>
+          </div>
+        </div>
+
+        <!-- Confirmed Date & Time Box (Explicitly DD/MM/YYYY) -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-sky-50/80 border border-sky-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-900 flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-600"></i>
+              Confirmed Visit Date (DD/MM/YYYY)
+            </span>
+            <div id="vDate" class="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">
+              22/11/2026 (22 November 2026)
+            </div>
+          </div>
+
+          <div class="space-y-1 sm:text-right border-t sm:border-t-0 sm:border-l border-sky-200 pt-2 sm:pt-0 sm:pl-4">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-900 flex items-center gap-1.5 sm:justify-end">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-sky-600"></i>
+              Selected Time Slot
+            </span>
+            <div id="vTime" class="text-sm sm:text-base font-bold text-sky-950">
+              Morning (10:00 AM – 1:00 PM)
+            </div>
+          </div>
+        </div>
+
+        <!-- Venue & QR Code -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div class="sm:col-span-2 space-y-2 text-xs text-slate-600">
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="map-pin" class="w-4 h-4 text-red-500"></i>
+              </div>
+              <div class="space-y-1">
+                <strong class="text-slate-900 block text-sm font-bold">
+                  Gift Collection Desk (Head Office):
+                </strong>
+                <div class="text-slate-800 font-semibold text-sm">
+                  10th Floor, MG SAM Center
+                </div>
+                <div class="text-xs text-slate-600">
+                  12 Bir Uttam AK Khandakar Rd, Mohakhali C/A, Dhaka 1212
+                </div>
+                <div class="text-[11px] text-slate-500">
+                  (Near Mohakhali Wireless Gate)
+                </div>
+                <div class="pt-1.5 flex items-center gap-2">
+                  <a href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs border border-sky-200 shadow-2xs transition-all">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500"></i>
+                    <span>Open in Google Maps</span>
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-sky-600"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 text-[11px] text-slate-500 space-y-1 border-t border-slate-100">
+              <div>• <strong>Strict Validity:</strong> Next 15 days (Valid until 05/12/2026).</div>
+              <div>• Simply show this digital pass on your smartphone at reception.</div>
+            </div>
+          </div>
+
+          <!-- QR Code Canvas -->
+          <div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-200">
+            <canvas id="qrCanvas" class="w-24 h-24 rounded"></canvas>
+            <span class="text-[10px] text-slate-500 mt-1 font-mono font-semibold">
+              Scan at Reception
+            </span>
+          </div>
+        </div>
+
+        <!-- Sponsor Recognition -->
+        <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+          <span>
+            Sponsored by <strong>Biniyog Club &amp; Mariners Group</strong>
+          </span>
+          <a href="https://brochure.marinersgroupbd.com/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-700 font-bold inline-flex items-center gap-1">
+            <span>Corporate Brochure</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        <button id="downloadPassBtn" class="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-md inline-flex items-center justify-center gap-2 transition-all cursor-pointer">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span id="downloadBtnText">Save Pass as Image (PNG)</span>
+        </button>
+
+        <button id="copyRefBtn" class="w-full sm:w-auto py-3.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span id="copyBtnText">Copy Ref ID</span>
+        </button>
+
+        <a id="shareWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto py-3.5 px-5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 transition-all">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          <span>Share WhatsApp</span>
+        </a>
+      </div>
+
+      <div class="text-center pt-2">
+        <button id="bookAnotherBtn" class="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer">
+          Book another visit for a family member or fellow alumni
+        </button>
+      </div>
+    </div>
+
+    <!-- DEFAULT FORM VIEW: SIMPLE, CLEAN, 100% ENGLISH -->
+    <div id="bookingFormSection" class="space-y-8">
+      <!-- Centered Hero Header -->
+      <div class="text-center space-y-2 max-w-2xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs font-extrabold uppercase tracking-wider">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-600"></i>
+          <span>Scan, Commit and Win your Gift</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          Head Office Visit &amp; Gift Pass
+        </h1>
+      </div>
+
+      <!-- Centered Form Card -->
+      <div class="max-w-2xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-100 pb-4">
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 uppercase tracking-wider mb-1">
+            <i data-lucide="shield-check" class="w-4 h-4 text-sky-600"></i>
+            <span>Official Gift Reservation Form</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
+            Select Your Visit Date &amp; Claim Pass
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Please fill in your details to immediately generate your digital VIP gift voucher.
+          </p>
+        </div>
+
+        <div id="errorAlert" class="hidden p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5 text-red-600"></i>
+          <span id="errorAlertText"></span>
+        </div>
+
+        <form id="giftForm" class="space-y-5">
+          <!-- 1. Full Legal Name -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+              Full Legal Name <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+              <input
+                type="text"
+                id="fullNameInput"
+                required
+                placeholder="e.g. Mohammad Tanvir Rahman"
+                class="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <!-- 2. Mobile Number -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+              Mobile Number <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <i data-lucide="phone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+              <input
+                type="tel"
+                id="mobileInput"
+                required
+                placeholder="01712345678"
+                class="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400 font-mono"
+              />
+            </div>
+            <span class="text-[11px] text-slate-500 mt-1 block">
+              Your gift pass confirmation and reminder will be verified with this number.
+            </span>
+          </div>
+
+          <!-- 3. Department & Batch -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                CU Department / Subject <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="deptInput"
+                placeholder="e.g. Economics / CSE / BBA"
+                class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                Batch / Passing Year <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="batchInput"
+                placeholder="e.g. 34th Batch / 2012"
+                class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <!-- 4. Short Address -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+              Short Address / Area <span class="text-slate-400 text-[10px] lowercase font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              id="addressInput"
+              placeholder="e.g. Sector 3, Uttara, Dhaka"
+              class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+            />
+          </div>
+
+          <!-- 5. Head Office Visit Date (Strict 15-Day Lock, Guaranteed DD/MM/YYYY Format) -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Head Office Visit Date (Day / Month / Year) <span class="text-red-500">*</span>
+              </label>
+              <span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 uppercase">
+                21/11/2026 to 05/12/2026
+              </span>
+            </div>
+
+            <!-- 15 Quick Date Selector Pills (Showing Day, Month, Year clearly) -->
+            <div id="datePillsContainer" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-3">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Explicit DD/MM/YYYY Dropdown Selector -->
+            <div class="space-y-2">
+              <div class="relative">
+                <i data-lucide="calendar" class="w-4 h-4 text-sky-600 absolute left-3.5 top-3.5 pointer-events-none"></i>
+                <select
+                  id="visitDateSelect"
+                  class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 text-slate-900 text-sm font-bold border border-slate-200 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition-all appearance-none cursor-pointer font-mono shadow-2xs"
+                >
+                  <!-- Populated via JS -->
+                </select>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5 pointer-events-none"></i>
+              </div>
+
+              <!-- Format confirmation -->
+              <div class="flex flex-wrap items-center justify-between gap-1.5 px-1 text-[11px] text-slate-500">
+                <span class="font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                  Format: DD/MM/YYYY (Day / Month / Year)
+                </span>
+                <span class="font-medium text-slate-600">
+                  Selected: <strong id="selectedDateDisplay" class="text-slate-900 font-mono">22/11/2026</strong> (<span id="verbalDateDisplay">22 November 2026</span>)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Preferred Time Slot -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Preferred Time Slot <span class="text-red-500">*</span>
+              </label>
+              <span class="text-[11px] font-semibold text-slate-500">Flexible schedule</span>
+            </div>
+
+            <div id="timeSlotsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Custom Time Field (Hidden by default) -->
+            <div id="customTimeWrapper" class="hidden">
+              <label class="block text-xs font-semibold text-slate-700 mb-1">
+                Specify Your Preferred Time:
+              </label>
+              <div class="relative">
+                <i data-lucide="clock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input
+                  type="text"
+                  id="customTimeInput"
+                  placeholder="e.g. 11:30 AM, 4:15 PM, or anytime during office hours"
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-sm border border-slate-200 focus:bg-white focus:border-sky-500 focus:outline-none transition-all placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit CTA -->
+          <button
+            type="submit"
+            id="submitBtn"
+            class="w-full py-3.5 px-6 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm sm:text-base shadow-md shadow-sky-600/25 inline-flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
+          >
+            <i data-lucide="gift" class="w-4 h-4"></i>
+            <span id="submitBtnText">Confirm Visit &amp; Get Digital Gift Pass →</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 4. Head Office Location & Directions Card -->
+    <section class="mt-8 max-w-2xl mx-auto">
+      <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-start gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0 shadow-2xs">
+            <i data-lucide="map-pin" class="w-6 h-6 text-red-500"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200 inline-block mb-1">
+              Head Office Location &amp; Gift Collection Point
+            </span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+              10th Floor, MG SAM Center
+            </h3>
+            <p class="text-xs text-slate-600 mt-0.5 font-medium">
+              12 Bir Uttam AK Khandakar Rd, Mohakhali C/A, Dhaka 1212
+            </p>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+              (Near Mohakhali Wireless Gate)
+            </div>
+          </div>
+        </div>
+
+        <a
+          href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="shrink-0 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm inline-flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105"
+        >
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-400"></i>
+          <span>Google Maps Directions</span>
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. Prominent Corporate Brochure Section (Matching User Request) -->
+    <section class="mt-6 max-w-2xl mx-auto">
+      <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950 text-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-700/80 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="text-[10px] uppercase font-mono tracking-widest text-sky-400 font-bold block">
+              Corporate Profile &amp; Project Facilities
+            </span>
+            <h3 class="text-xl sm:text-2xl font-bold tracking-tight">
+              Mariners Group Corporate Brochure
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-md">
+              Discover our modern industrial bakery lines, tunnel ovens, dredge-filled factory
+              parks, and ethical Halal business ecosystem.
+            </p>
+          </div>
+
+          <a
+            href="https://brochure.marinersgroupbd.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="shrink-0 px-6 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-extrabold text-sm shadow-md inline-flex items-center justify-center gap-2 transition-all hover:scale-105"
+          >
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>View Corporate Brochure</span>
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Strategic Concerns Organization Tree (Matching Main Site) -->
+    <section class="mt-14 pt-10 border-t border-slate-200/80 max-w-4xl mx-auto">
+      <div class="flex flex-col items-center">
+        <a
+          href="https://biniyogclub.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Visit Biniyog Club Website"
+          class="inline-flex items-center justify-center gap-3 px-8 sm:px-12 py-3 rounded-2xl bg-white border border-stone-200/90 shadow-xs hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer group"
+        >
+          <img
+            src="/images/biniyog-club-logo.png"
+            alt="Biniyog Club"
+            class="w-8 h-8 object-contain shrink-0 group-hover:scale-105 transition-transform"
+          />
+          <span class="text-lg sm:text-xl font-bold tracking-tight text-[#0a523d] group-hover:text-emerald-700 transition-colors">
+            Biniyog Club
+          </span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors"></i>
+        </a>
+
+        <div class="hidden lg:block w-[1.5px] h-6 bg-[#D4CFCA]"></div>
+        <div class="lg:hidden text-center mt-3 mb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+          Strategic Group Concerns
+        </div>
+      </div>
+
+      <div class="relative mt-2">
+        <div class="hidden lg:block absolute top-0 left-[8.333%] right-[8.333%] h-[1.5px] bg-[#D4CFCA] pointer-events-none"></div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:pt-5 pt-0">
+          <!-- 1. Mariners Group -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://marinersgroup.com.bd" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/mariners-group.png" alt="Mariners Group" class="max-h-[44px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+
+          <!-- 2. MOHS Group -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://mohsrealestate.com" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/mohs-group.png" alt="MOHS Group" class="max-h-[36px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+
+          <!-- 3. Marinozz Group -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://marinozz.restaurant" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/marinozz-group.png" alt="Marinozz Group" class="max-h-[34px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+
+          <!-- 4. Community Ventures -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://marinersgroup.com.bd" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/community-ventures.png" alt="Community Ventures" class="max-h-[32px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+
+          <!-- 5. Venture Alliance -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://marinersgroup.com.bd" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/venture-alliance.png" alt="Venture Alliance" class="max-h-[32px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+
+          <!-- 6. Venture System -->
+          <div class="relative group h-full flex flex-col">
+            <div class="hidden lg:block absolute -top-5 left-1/2 -translate-x-1/2 w-[1.5px] h-5 bg-[#D4CFCA] pointer-events-none"></div>
+            <a href="https://marinersgroup.com.bd" target="_blank" rel="noopener noreferrer" class="bg-white rounded-2xl border border-stone-200/90 p-3 flex items-center justify-center h-[80px] w-full shadow-xs hover:border-sky-500 hover:shadow-md transition-all group/card">
+              <img src="/images/concerns/venture-system.png" alt="Venture System" class="max-h-[32px] max-w-[85%] w-auto object-contain mx-auto group-hover/card:scale-105 transition-all" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-slate-500 mt-6 font-medium">
+        Food, logistics, and all related arrangements proudly sponsored by
+        <strong>Biniyog Club</strong>, <strong>Mariners Group</strong>,
+        <strong>MOHS Group</strong>, and <strong>Marinozz Group</strong>.
+      </p>
+    </section>
+  </main>
+
+  <!-- 6. Footer -->
+  <footer class="mt-16 bg-white border-t border-slate-200 py-8 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto space-y-2">
+      <p class="font-semibold text-slate-700">
+        Chittagong University Day 2026 • CU Alumni Society Uttara, Dhaka
+      </p>
+      <p>
+        Gift Collection Point: 10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212 • Hotline: +880 1335-149006 •
+        <a href="https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-700 hover:underline font-semibold">
+          Google Maps Location ↗
+        </a>
+      </p>
+      <p class="pt-2 text-slate-400">
+        © 2026 Biniyog Club &amp; Mariners Group. All rights reserved. •
+        <a href="https://brochure.marinersgroupbd.com/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline font-medium">
+          Corporate Brochure
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // 15-Day Date Data (Strictly DD/MM/YYYY: Date first, then Month, then Year)
+    const ALLOWED_DATES = [
+      { full: "2026-11-21", dmy: "21/11/2026", day: "Sat", date: "21", month: "Nov", year: "2026", verbose: "21 November 2026" },
+      { full: "2026-11-22", dmy: "22/11/2026", day: "Sun", date: "22", month: "Nov", year: "2026", verbose: "22 November 2026" },
+      { full: "2026-11-23", dmy: "23/11/2026", day: "Mon", date: "23", month: "Nov", year: "2026", verbose: "23 November 2026" },
+      { full: "2026-11-24", dmy: "24/11/2026", day: "Tue", date: "24", month: "Nov", year: "2026", verbose: "24 November 2026" },
+      { full: "2026-11-25", dmy: "25/11/2026", day: "Wed", date: "25", month: "Nov", year: "2026", verbose: "25 November 2026" },
+      { full: "2026-11-26", dmy: "26/11/2026", day: "Thu", date: "26", month: "Nov", year: "2026", verbose: "26 November 2026" },
+      { full: "2026-11-27", dmy: "27/11/2026", day: "Fri", date: "27", month: "Nov", year: "2026", verbose: "27 November 2026" },
+      { full: "2026-11-28", dmy: "28/11/2026", day: "Sat", date: "28", month: "Nov", year: "2026", verbose: "28 November 2026" },
+      { full: "2026-11-29", dmy: "29/11/2026", day: "Sun", date: "29", month: "Nov", year: "2026", verbose: "29 November 2026" },
+      { full: "2026-11-30", dmy: "30/11/2026", day: "Mon", date: "30", month: "Nov", year: "2026", verbose: "30 November 2026" },
+      { full: "2026-12-01", dmy: "01/12/2026", day: "Tue", date: "01", month: "Dec", year: "2026", verbose: "01 December 2026" },
+      { full: "2026-12-02", dmy: "02/12/2026", day: "Wed", date: "02", month: "Dec", year: "2026", verbose: "02 December 2026" },
+      { full: "2026-12-03", dmy: "03/12/2026", day: "Thu", date: "03", month: "Dec", year: "2026", verbose: "03 December 2026" },
+      { full: "2026-12-04", dmy: "04/12/2026", day: "Fri", date: "04", month: "Dec", year: "2026", verbose: "04 December 2026" },
+      { full: "2026-12-05", dmy: "05/12/2026", day: "Sat", date: "05", month: "Dec", year: "2026", verbose: "05 December 2026" },
+    ];
+
+    function formatDMY(dateStr) {
+      if (!dateStr) return "";
+      const parts = dateStr.split("-");
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0]}`; // DD/MM/YYYY
+      }
+      return dateStr;
+    }
+
+    function formatVerbalDMY(dateStr) {
+      if (!dateStr) return "";
+      const parts = dateStr.split("-");
+      if (parts.length === 3) {
+        const monthNames = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        const day = parts[2];
+        const monthIndex = parseInt(parts[1], 10) - 1;
+        const monthName = monthNames[monthIndex] || parts[1];
+        const year = parts[0];
+        return `${day} ${monthName} ${year}`;
+      }
+      return dateStr;
+    }
+
+    const PRESET_TIME_SLOTS = [
+      "Morning (10:00 AM – 1:00 PM)",
+      "Afternoon (2:00 PM – 5:00 PM)",
+      "Evening (5:00 PM – 8:00 PM)",
+      "Custom Time (Flexible)",
+    ];
+
+    let selectedDate = "2026-11-22";
+    let selectedTimeSlot = "Morning (10:00 AM – 1:00 PM)";
+    let currentBooking = null;
+
+    // Render Date Pills & Dropdown Selector
+    const datePillsContainer = document.getElementById("datePillsContainer");
+    const visitDateSelect = document.getElementById("visitDateSelect");
+    const selectedDateDisplay = document.getElementById("selectedDateDisplay");
+    const verbalDateDisplay = document.getElementById("verbalDateDisplay");
+
+    function populateDateDropdown() {
+      visitDateSelect.innerHTML = "";
+      ALLOWED_DATES.forEach((d) => {
+        const opt = document.createElement("option");
+        opt.value = d.full;
+        opt.textContent = `${d.dmy}  —  ${d.day}, ${d.verbose} ${d.full === "2026-11-21" ? "(Event Day)" : ""} ${d.full === "2026-12-05" ? "(Last Day)" : ""}`;
+        visitDateSelect.appendChild(opt);
+      });
+      visitDateSelect.value = selectedDate;
+    }
+
+    function updateDateSelectionDisplay() {
+      selectedDateDisplay.textContent = formatDMY(selectedDate);
+      verbalDateDisplay.textContent = formatVerbalDMY(selectedDate);
+    }
+
+    function renderDatePills() {
+      datePillsContainer.innerHTML = "";
+      ALLOWED_DATES.forEach((d) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isSelected = selectedDate === d.full;
+        btn.className = `p-2 rounded-xl text-center border transition-all cursor-pointer flex flex-col items-center justify-center ${
+          isSelected
+            ? "bg-sky-600 text-white border-sky-600 shadow-sm ring-1 ring-sky-600"
+            : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+        }`;
+        btn.innerHTML = `
+          <span class="text-[10px] uppercase font-bold opacity-80">${d.day}</span>
+          <span class="text-xs sm:text-sm font-extrabold">${d.date} ${d.month}</span>
+          <span class="text-[9px] font-mono mt-0.5 ${isSelected ? 'text-sky-100' : 'text-slate-400'}">${d.dmy}</span>
+        `;
+        btn.addEventListener("click", () => {
+          selectedDate = d.full;
+          visitDateSelect.value = d.full;
+          updateDateSelectionDisplay();
+          renderDatePills();
+        });
+        datePillsContainer.appendChild(btn);
+      });
+    }
+
+    populateDateDropdown();
+    updateDateSelectionDisplay();
+    renderDatePills();
+
+    visitDateSelect.addEventListener("change", (e) => {
+      selectedDate = e.target.value;
+      updateDateSelectionDisplay();
+      renderDatePills();
+    });
+
+    // Render Time Slots
+    const timeSlotsContainer = document.getElementById("timeSlotsContainer");
+    const customTimeWrapper = document.getElementById("customTimeWrapper");
+    const customTimeInput = document.getElementById("customTimeInput");
+
+    function renderTimeSlots() {
+      timeSlotsContainer.innerHTML = "";
+      PRESET_TIME_SLOTS.forEach((slot) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isSelected = selectedTimeSlot === slot;
+        btn.className = `p-2.5 rounded-xl text-left border text-xs transition-all cursor-pointer flex items-center justify-between ${
+          isSelected
+            ? "bg-sky-50 border-sky-600 text-sky-950 ring-1 ring-sky-600 font-bold shadow-2xs"
+            : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+        }`;
+        btn.innerHTML = `<span>${slot}</span><span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${isSelected ? 'bg-sky-600 text-white' : 'border border-slate-300'}">${isSelected ? '✓' : ''}</span>`;
+        btn.addEventListener("click", () => {
+          selectedTimeSlot = slot;
+          if (slot === "Custom Time (Flexible)") {
+            customTimeWrapper.classList.remove("hidden");
+          } else {
+            customTimeWrapper.classList.add("hidden");
+          }
+          renderTimeSlots();
+        });
+        timeSlotsContainer.appendChild(btn);
+      });
+    }
+
+    renderTimeSlots();
+
+    // Form Handling
+    const giftForm = document.getElementById("giftForm");
+    const errorAlert = document.getElementById("errorAlert");
+    const errorAlertText = document.getElementById("errorAlertText");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitBtnText = document.getElementById("submitBtnText");
+
+    giftForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorAlert.classList.add("hidden");
+
+      const fullName = document.getElementById("fullNameInput").value.trim();
+      const mobileNumber = document.getElementById("mobileInput").value.trim().replace(/[\s-]/g, "");
+      const department = document.getElementById("deptInput").value.trim();
+      const batch = document.getElementById("batchInput").value.trim();
+      const shortAddress = document.getElementById("addressInput").value.trim();
+
+      if (!fullName || fullName.length < 2) {
+        showError("Please enter your full legal name.");
+        return;
+      }
+
+      if (!mobileNumber || mobileNumber.length < 11) {
+        showError("Please enter a valid 11-digit mobile number (e.g. 01712345678).");
+        return;
+      }
+
+      if (!selectedDate || selectedDate < "2026-11-21" || selectedDate > "2026-12-05") {
+        showError("Visit date must be strictly within the 15-day period (21/11/2026 – 05/12/2026).");
+        return;
+      }
+
+      const effectiveTime = selectedTimeSlot === "Custom Time (Flexible)"
+        ? (customTimeInput.value.trim() || "Flexible (Custom Time)")
+        : selectedTimeSlot;
+
+      submitBtn.disabled = true;
+      submitBtnText.textContent = "Generating Your Pass...";
+
+      try {
+        const res = await fetch("/api/gift", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName,
+            mobileNumber,
+            department: department || undefined,
+            batch: batch || undefined,
+            shortAddress: shortAddress || undefined,
+            visitDate: selectedDate,
+            visitTimeSlot: effectiveTime,
+            customTime: selectedTimeSlot === "Custom Time (Flexible)" ? customTimeInput.value.trim() : undefined,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to confirm gift booking.");
+        }
+
+        displayVoucher(data.booking);
+      } catch (err) {
+        showError(err.message || "An unexpected error occurred. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtnText.textContent = "Confirm Visit & Get Digital Gift Pass →";
+      }
+    });
+
+    function showError(msg) {
+      errorAlertText.textContent = msg;
+      errorAlert.classList.remove("hidden");
+      errorAlert.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function displayVoucher(booking) {
+      currentBooking = booking;
+      document.getElementById("bookingFormSection").classList.add("hidden");
+      const voucherScreen = document.getElementById("voucherScreen");
+      voucherScreen.classList.remove("hidden");
+
+      document.getElementById("vName").textContent = booking.fullName;
+      document.getElementById("vRef").textContent = booking.referenceNo;
+      document.getElementById("vDate").textContent = `${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})`;
+      document.getElementById("vTime").textContent = booking.visitTimeSlot;
+
+      const subParts = [booking.department, booking.batch ? `Batch ${booking.batch}` : "", booking.shortAddress].filter(Boolean);
+      document.getElementById("vSubInfo").textContent = subParts.join(" • ") || "Chittagong University Alumni Member";
+
+      // Render QR Code
+      const qrPayload = JSON.stringify({
+        ref: booking.referenceNo,
+        name: booking.fullName,
+        phone: booking.mobileNumber,
+        date: formatDMY(booking.visitDate),
+        time: booking.visitTimeSlot,
+        event: "CU Day 2026 Gift",
+        location: "10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212",
+        map: "https://maps.app.goo.gl/83ZSDuxA7xWiMV7b9",
+      });
+
+      const qrCanvas = document.getElementById("qrCanvas");
+      QRCode.toCanvas(qrCanvas, qrPayload, {
+        width: 100,
+        margin: 1,
+        color: { dark: "#0c4a6e", light: "#ffffff" },
+      });
+
+      // Confetti
+      try {
+        confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ["#0284c7", "#008c5d", "#10b981", "#38bdf8", "#ffffff"],
+        });
+      } catch (e) {}
+
+      // WhatsApp Share Link
+      const waText = encodeURIComponent(`I booked my visit to Biniyog Club / Mariners Group Head Office! Pass ID: ${booking.referenceNo}. Visit Date: ${formatDMY(booking.visitDate)} (${formatVerbalDMY(booking.visitDate)})`);
+      document.getElementById("shareWaBtn").href = `https://wa.me/?text=${waText}`;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      lucide.createIcons();
+    }
+
+    // Copy Ref
+    document.getElementById("copyRefBtn").addEventListener("click", () => {
+      if (!currentBooking) return;
+      navigator.clipboard.writeText(currentBooking.referenceNo);
+      const copyBtnText = document.getElementById("copyBtnText");
+      copyBtnText.textContent = "Copied!";
+      setTimeout(() => {
+        copyBtnText.textContent = "Copy Ref ID";
+      }, 2000);
+    });
+
+    // Book Another
+    document.getElementById("bookAnotherBtn").addEventListener("click", () => {
+      currentBooking = null;
+      document.getElementById("voucherScreen").classList.add("hidden");
+      document.getElementById("bookingFormSection").classList.remove("hidden");
+      document.getElementById("fullNameInput").value = "";
+      document.getElementById("mobileInput").value = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Download Pass PNG (Date first, then Month, then Year)
+    document.getElementById("downloadPassBtn").addEventListener("click", async () => {
+      if (!currentBooking) return;
+      const downloadBtnText = document.getElementById("downloadBtnText");
+      downloadBtnText.textContent = "Generating...";
+
+      try {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const width = 1000;
+        const height = 1380;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Background
+        const grad = ctx.createLinearGradient(0, 0, 0, height);
+        grad.addColorStop(0, "#082f49");
+        grad.addColorStop(0.5, "#0c4a6e");
+        grad.addColorStop(1, "#082f49");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+
+        // White panel
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(40, 40, 920, 1300);
+
+        // Header
+        ctx.fillStyle = "#0c4a6e";
+        ctx.fillRect(40, 40, 920, 170);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 30px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("CHITTAGONG UNIVERSITY DAY 2026", 500, 98);
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "600 18px sans-serif";
+        ctx.fillText("CU ALUMNI SOCIETY UTTARA, DHAKA • FRIENDS CLUB FIELD", 500, 136);
+
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText("OFFICIAL SPONSOR: BINIYOG CLUB & MARINERS GROUP", 500, 172);
+
+        // Title Ribbon
+        ctx.fillStyle = "#f0f9ff";
+        ctx.fillRect(80, 235, 840, 72);
+
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "bold 18px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("VIP DIGITAL GIFT VOUCHER & INVITATION PASS", 110, 278);
+
+        ctx.fillStyle = "#0284c7";
+        ctx.font = "bold 20px monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(currentBooking.referenceNo, 890, 278);
+
+        // Guest Name
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("HONORED GUEST / ALUMNI MEMBER", 80, 345);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 32px sans-serif";
+        ctx.fillText(currentBooking.fullName, 80, 388);
+
+        ctx.fillStyle = "#334155";
+        ctx.font = "16px sans-serif";
+        const subInfo = [currentBooking.department, currentBooking.batch ? `Batch ${currentBooking.batch}` : "", currentBooking.shortAddress].filter(Boolean).join("  •  ");
+        ctx.fillText(subInfo || "Chittagong University Alumni Member", 80, 422);
+
+        ctx.fillStyle = "#0284c7";
+        ctx.font = "bold 16px monospace";
+        ctx.fillText(`Mobile: ${currentBooking.mobileNumber}`, 80, 452);
+
+        // Divider
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(80, 480);
+        ctx.lineTo(920, 480);
+        ctx.stroke();
+
+        // Date & Time Box (Explicitly DD/MM/YYYY)
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(80, 510, 840, 120);
+
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("CONFIRMED VISIT DATE (DD/MM/YYYY)", 110, 545);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 26px monospace";
+        ctx.fillText(`${formatDMY(currentBooking.visitDate)}  (${formatVerbalDMY(currentBooking.visitDate)})`, 110, 588);
+
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("PREFERRED TIME SLOT", 650, 545);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 18px sans-serif";
+        ctx.fillText(currentBooking.visitTimeSlot, 650, 588);
+
+        // Location Box
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.strokeRect(80, 660, 840, 160);
+
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "bold 14px sans-serif";
+        ctx.fillText("HEAD OFFICE GIFT COLLECTION DESK", 110, 698);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillText("10th Floor, MG SAM Center, 12 Bir Uttam AK Khandakar Rd, Dhaka 1212", 110, 735);
+
+        ctx.fillStyle = "#64748b";
+        ctx.font = "14px sans-serif";
+        ctx.fillText("Mohakhali C/A (Near Wireless Gate) • Maps: maps.app.goo.gl/83ZSDuxA7xWiMV7b9", 110, 768);
+
+        ctx.fillStyle = "#0284c7";
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText("Helpdesk Hotline: +880 1335-149006  •  Brochure: brochure.marinersgroupbd.com", 110, 798);
+
+        // QR Code
+        const qrCanvas = document.getElementById("qrCanvas");
+        if (qrCanvas) {
+          ctx.drawImage(qrCanvas, 380, 860, 240, 240);
+          ctx.fillStyle = "#64748b";
+          ctx.font = "bold 12px monospace";
+          ctx.textAlign = "center";
+          ctx.fillText("PRESENT THIS QR CODE AT RECEPTION", 500, 1125);
+        }
+
+        // Validity (DD/MM/YYYY)
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ef4444";
+        ctx.font = "bold 14px sans-serif";
+        ctx.fillText("VALID FOR 15 DAYS ONLY: 21/11/2026 – 05/12/2026 (21 NOV – 05 DEC 2026)", 500, 1165);
+
+        ctx.fillStyle = "#64748b";
+        ctx.font = "13px sans-serif";
+        ctx.fillText("Please display this pass on your phone upon visiting our Head Office to claim your exclusive gift.", 500, 1195);
+
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "bold 14px sans-serif";
+        ctx.fillText("Sponsored by Biniyog Club  •  Mariners Group  •  MOHS Group  •  Marinozz Group", 500, 1255);
+
+        const link = document.createElement("a");
+        link.download = `GIFT-PASS-${currentBooking.referenceNo}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (err) {
+        console.error(err);
+      } finally {
+        downloadBtnText.textContent = "Save Pass as Image (PNG)";
+      }
+    });
+  </script>
+</body>
+</html>
