@@ -32,7 +32,7 @@ import {
 
 // 15-Day Date Range (Strictly DD/MM/YYYY, Excluding Fridays as Office is Closed)
 const ALLOWED_DATES = [
-  { full: "2026-11-21", dmy: "21/11/2026", day: "Sat", date: "21", month: "Nov", year: "2026", verbose: "21 November 2026", label: "21/11/2026 (Sat - Event Day)" },
+  { full: "2026-11-21", dmy: "21/11/2026", day: "Sat", date: "21", month: "Nov", year: "2026", verbose: "21 November 2026", label: "21/11/2026 (Sat)" },
   { full: "2026-11-22", dmy: "22/11/2026", day: "Sun", date: "22", month: "Nov", year: "2026", verbose: "22 November 2026", label: "22/11/2026 (Sun)" },
   { full: "2026-11-23", dmy: "23/11/2026", day: "Mon", date: "23", month: "Nov", year: "2026", verbose: "23 November 2026", label: "23/11/2026 (Mon)" },
   { full: "2026-11-24", dmy: "24/11/2026", day: "Tue", date: "24", month: "Nov", year: "2026", verbose: "24 November 2026", label: "24/11/2026 (Tue)" },
@@ -951,7 +951,7 @@ export default function CUGiftPage() {
                       >
                         {ALLOWED_DATES.map((d) => (
                           <option key={d.full} value={d.full}>
-                            {d.dmy}  —  {d.day}, {d.verbose} {d.full === "2026-11-21" ? "(Event Day)" : ""} {d.full === "2026-12-05" ? "(Last Day)" : ""}
+                            {d.dmy}  —  {d.day}, {d.verbose} {d.full === "2026-12-05" ? "(Last Day)" : ""}
                           </option>
                         ))}
                       </select>

@@ -721,7 +721,7 @@
       ALLOWED_DATES.forEach((d) => {
         const opt = document.createElement("option");
         opt.value = d.full;
-        opt.textContent = `${d.dmy}  —  ${d.day}, ${d.verbose} ${d.full === "2026-11-21" ? "(Event Day)" : ""} ${d.full === "2026-12-05" ? "(Last Day)" : ""}`;
+        opt.textContent = `${d.dmy}  —  ${d.day}, ${d.verbose} ${d.full === "2026-12-05" ? "(Last Day)" : ""}`.trim();
         visitDateSelect.appendChild(opt);
       });
       visitDateSelect.value = selectedDate;
